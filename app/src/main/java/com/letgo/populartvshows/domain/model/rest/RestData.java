@@ -1,8 +1,13 @@
 package com.letgo.populartvshows.domain.model.rest;
 
-/**
- * Created by diego.galico on 20/09/2016.
- */
+import com.letgo.populartvshows.presentation.presenters.impl.PopularTvShowsPresenterImpl;
 
-public class RestData {
+/**
+ * @author diego.galico
+ */
+public interface RestData {
+
+    void getTvShowsByPage(int page, PopularTvShowsPresenterImpl presenter);
+
+    void getTvShowDetail(String id);
 }

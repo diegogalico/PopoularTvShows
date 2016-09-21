@@ -8,7 +8,6 @@ import java.util.List;
 /**
  * @author diego.galico
  */
-
 public class TvShow {
 
     @SerializedName("poster_path")
@@ -62,6 +61,8 @@ public class TvShow {
     @SerializedName("original_name")
     @Expose
     String original_name;
+
+    boolean tvShowReady;
 
     public String getPosterPath() {
         return poster_path;
@@ -165,5 +166,15 @@ public class TvShow {
 
     public void setOriginalName(String originalName) {
         this.original_name = originalName;
+    }
+
+    public void setTvShowReady(boolean tvShowReady) {
+
+        this.tvShowReady = tvShowReady;
+    }
+
+    public boolean isTvShowReady() {
+
+        return tvShowReady;
     }
 }

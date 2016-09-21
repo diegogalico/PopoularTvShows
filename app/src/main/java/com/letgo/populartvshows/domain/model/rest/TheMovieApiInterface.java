@@ -11,6 +11,7 @@ import rx.Observable;
  */
 public interface TheMovieApiInterface {
 
-    @GET("/tv/top_rated")
-    Observable<TvShowsWrapper> getPopularTvShowsByPage(@Query("api_key") String apiKey,  @Query("page") int page);
+    @GET("/3/tv/top_rated")
+    Observable<TvShowsWrapper> getPopularTvShowsByPage(@Query("api_key") String apiKey);
+
 }

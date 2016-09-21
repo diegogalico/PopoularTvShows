@@ -3,13 +3,13 @@ package com.letgo.populartvshows.domain.model.entities;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author diego.galico
  */
-
-public class TvShowsWrapper {
+public class TvShowsWrapper implements Serializable {
 
     @SerializedName("page")
     @Expose
@@ -18,6 +18,10 @@ public class TvShowsWrapper {
     @SerializedName("results")
     @Expose
     private List<TvShow> tvShowInfo;
+
+    public TvShowsWrapper(List<TvShow> tvShowInfo) {
+        this.tvShowInfo = tvShowInfo;
+    }
 
     public String getPage() {
         return page;

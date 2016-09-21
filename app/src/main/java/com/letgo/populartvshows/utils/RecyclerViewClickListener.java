@@ -1,8 +1,11 @@
 package com.letgo.populartvshows.utils;
 
-/**
- * Created by diego.galico on 20/09/2016.
- */
+import android.view.View;
 
-public class RecyclerViewClickListener {
+/**
+ * @author diego.galico
+ */
+public interface RecyclerViewClickListener {
+
+    public void onClick(View v, int position, float x, float y);
 }

@@ -1,32 +1,37 @@
 package com.letgo.populartvshows.domain.interactors.impl;
 
-import com.letgo.populartvshows.domain.executor.Executor;
-import com.letgo.populartvshows.domain.executor.MainThread;
 import com.letgo.populartvshows.domain.interactors.TvShowsInteractor;
-import com.letgo.populartvshows.domain.interactors.base.AbstractInteractor;
-import com.letgo.populartvshows.domain.repository.Repository;
+import com.letgo.populartvshows.domain.model.rest.RestData;
+import com.letgo.populartvshows.presentation.presenters.impl.PopularTvShowsPresenterImpl;
+
+import javax.inject.Inject;
 
 /**
  * @author diego.galico
- *
- * This is an interactor boilerplate with a reference to a model repository.
- * <p/>
  */
-public class TvShowsInteractorImpl extends AbstractInteractor implements TvShowsInteractor {
+public class TvShowsInteractorImpl implements TvShowsInteractor {
 
-    private TvShowsInteractor.Callback mCallback;
-    private Repository                mRepository;
+    private int mCurrentPage = 1;
+    private final RestData mRestData;
+    private PopularTvShowsPresenterImpl mPopularTvShowsPresenter;
 
-    public TvShowsInteractorImpl(Executor threadExecutor,
-                                MainThread mainThread,
-                                Callback callback, Repository repository) {
-        super(threadExecutor, mainThread);
-        mCallback = callback;
-        mRepository = repository;
+    @Inject
+    public TvShowsInteractorImpl(RestData mRestData) {
+        this.mRestData = mRestData;
     }
 
     @Override
-    public void run() {
-        // TODO: Implement this with your business logic
+    public void requestPopularTvShows() {
+        mRestData.getTvShowsByPage(mCurrentPage, mPopularTvShowsPresenter);
+    }
+
+    public void setPresenter(PopularTvShowsPresenterImpl popularTvShowsPresenter) {
+        this.mPopularTvShowsPresenter = popularTvShowsPresenter;
+    }
+
+    @Override
+    public void execute() {
+        requestPopularTvShows();
+        mCurrentPage++;
     }
 }

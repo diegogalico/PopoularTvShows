@@ -1,68 +1,112 @@
 package com.letgo.populartvshows.presentation.ui.adapters;
 
-import android.support.v7.widget.CardView;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.letgo.populartvshows.R;
-import com.letgo.populartvshows.domain.model.ProductModel;
+import com.letgo.populartvshows.domain.model.entities.TvShow;
+import com.letgo.populartvshows.utils.RecyclerViewClickListener;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Oliva on 9/18/16.
+ * @author diego.galico
  */
-public class PopularTvShowsAdapter extends RecyclerView.Adapter<PopularTvShowsAdapter.ProductViewHolder> {
+public class PopularTvShowsAdapter extends RecyclerView.Adapter<PopularTvShowsAdapter.TvShowViewHolder> {
 
-    List<ProductModel> mProducts;
+    private Context mContext;
+    private List<TvShow> mTvShows;
+    private RecyclerViewClickListener mRecyclerClickListener;
 
-    public PopularTvShowsAdapter() {
-        super();
-        mProducts = new ArrayList<ProductModel>();
+    public PopularTvShowsAdapter(List<TvShow> tvShows) {
+        mTvShows = tvShows;
     }
 
-    public void addData(ProductModel product) {
-        mProducts.add(product);
-        notifyDataSetChanged();
-    }
-
-    public void clear() {
-        mProducts.clear();
-        notifyDataSetChanged();
+    public List<TvShow> getTvShowsList() {
+        return mTvShows;
     }
 
     @Override
-    public ProductViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+    public TvShowViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.item_product, viewGroup, false);
-        ProductViewHolder viewHolder = new ProductViewHolder(v);
+                               .inflate(R.layout.item_popular_tv_show, viewGroup, false);
+        this.mContext = viewGroup.getContext();
+        TvShowViewHolder viewHolder = new TvShowViewHolder(v, mRecyclerClickListener);
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(ProductViewHolder viewHolder, int i) {
-        ProductModel product = mProducts.get(i);
-        viewHolder.cardView.setBackgroundResource(product.getImage());
-        viewHolder.title.setText(product.getName());
+    public void onBindViewHolder(TvShowViewHolder viewHolder, final int position) {
+        TvShow tvShow = mTvShows.get(position);
+        viewHolder.title.setText(tvShow.getName());
+        String posterURL = tvShow.getPosterPath();
+        Picasso.with(mContext)
+               .load(posterURL)
+               .fit().centerCrop()
+               .into(viewHolder.itemTvShowCover, new Callback() {
+                   @Override
+                   public void onSuccess() {
+                       mTvShows.get(position).setTvShowReady(true);
+                   }
+
+                   @Override
+                   public void onError() {
+
+                   }
+               });
+    }
+
+    public boolean isTvShowReady(int position) {
+
+        return mTvShows.get(position).isTvShowReady();
+    }
+
+    public void clear() {
+        mTvShows.clear();
+        notifyDataSetChanged();
+    }
+
+    public void appendTvShows(List<TvShow> tvShowList) {
+        mTvShows.addAll(tvShowList);
+        notifyDataSetChanged();
+    }
+
+    public void setRecyclerListListener(RecyclerViewClickListener mRecyclerClickListener) {
+        this.mRecyclerClickListener = mRecyclerClickListener;
     }
 
     @Override
     public int getItemCount() {
-        return mProducts.size();
+        return mTvShows.size();
     }
 
-    class ProductViewHolder extends RecyclerView.ViewHolder {
-        public CardView cardView;
+    class TvShowViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
+        private final RecyclerViewClickListener onClickListener;
+        public ImageView itemTvShowCover;
         public TextView title;
 
-        public ProductViewHolder(View itemView) {
+        public TvShowViewHolder(View itemView, RecyclerViewClickListener onClickListener) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.card_view);
+            itemTvShowCover = (ImageView) itemView.findViewById(R.id.item_tv_show_cover);
             title = (TextView) itemView.findViewById(R.id.title);
+            this.onClickListener = onClickListener;
+        }
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            if (event.getAction() == MotionEvent.ACTION_UP && event.getAction() != MotionEvent.ACTION_MOVE) {
+
+                onClickListener.onClick(v, getPosition(), event.getX(), event.getY());
+            }
+            return true;
         }
     }
 }

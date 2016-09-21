@@ -2,15 +2,15 @@ package com.letgo.populartvshows.domain.interactors;
 
 
 import com.letgo.populartvshows.domain.interactors.base.Interactor;
+import com.letgo.populartvshows.presentation.presenters.impl.PopularTvShowsPresenterImpl;
 
 /**
  * @author diego.galico
  */
 public interface TvShowsInteractor extends Interactor {
 
-    interface Callback {
-        // TODO: Add interactor callback methods here
-    }
+    void requestPopularTvShows();
 
-    // TODO: Add interactor methods here
+    void setPresenter(PopularTvShowsPresenterImpl presenter);
+
 }
