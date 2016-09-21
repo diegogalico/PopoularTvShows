@@ -58,7 +58,7 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, Obs
         }
     }
 
-    public void onEndListReached() {
+    public void showMoreTvShows() {
         mGetPopularTvShows.execute();
         mTvShowsView.showProgress();
         mIsLoading = true;

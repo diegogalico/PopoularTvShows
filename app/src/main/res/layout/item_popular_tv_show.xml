@@ -9,15 +9,15 @@
         android:id="@+id/card_view"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="@dimen/item_height"
         android:layout_gravity="center"
-        card_view:cardCornerRadius="4dp">
+        card_view:cardCornerRadius="@dimen/item_corner">
 
         <ImageView
             android:id="@+id/item_tv_show_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/tv_show_placeholder"
+            android:background="@color/grey"
             android:scaleType="centerCrop"/>
 
         <TextView
@@ -25,8 +25,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
+            android:padding="5dp"
             android:background="@color/black_transparent"
             android:gravity="center"
             android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/average"
+            android:layout_width="match_parent"
+            android:padding="5dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|top"
+            android:gravity="right"
+            android:textColor="@color/grey"/>
     </android.support.v7.widget.CardView>
+
+
 </LinearLayout>
