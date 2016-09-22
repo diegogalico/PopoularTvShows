@@ -5,18 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.letgo.populartvshows.R;
-import com.letgo.populartvshows.app.PopularTvShowsApplication;
-import com.letgo.populartvshows.app.dependencyinjection.components.DaggerSimilarTvShowsComponent;
-import com.letgo.populartvshows.app.dependencyinjection.modules.SimilarTvShowsModule;
-import com.letgo.populartvshows.domain.model.entities.TvShow;
-import com.letgo.populartvshows.presentation.presenters.SimilarTvShowsPresenter;
-import com.letgo.populartvshows.presentation.presenters.impl.SimilarTvShowsPresenterImpl;
-
-import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -25,43 +16,37 @@ import butterknife.Optional;
 /**
  * @author diego.galico
  */
-public class TvShowDetailFragment extends BaseFragment implements SimilarTvShowsPresenter.SimilarTvShowsView {
-
+public class TvShowDetailFragment extends BaseFragment {
 
     private int mTvShowId;
     private static final String TV_SHOW_ID = "tv_show_id";
-
-    @Inject
-    SimilarTvShowsPresenterImpl mSimilarTvShowsPresenter;
 
     @Optional
     @InjectView(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
 
-    public static TvShowDetailFragment newInstance() {
+    @Optional
+    @InjectView(R.id.title_tv_show)
+    TextView mTitle;
+
+    public static TvShowDetailFragment newInstance(int num) {
         TvShowDetailFragment tvShowDetailFragment = new TvShowDetailFragment();
+
+        // Supply num input as an argument.
+        Bundle args = new Bundle();
+        args.putInt(TV_SHOW_ID, num);
+        tvShowDetailFragment.setArguments(args);
+
         return tvShowDetailFragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mTvShowId = getArguments() != null ? getArguments().getInt(TV_SHOW_ID) : 1;
         Bundle bundle = this.getArguments();
         mTvShowId = bundle.getInt(TV_SHOW_ID, 0);
 
-        initializeDependencyInjector();
-        if (savedInstanceState == null) {
-            mSimilarTvShowsPresenter.attachView(this);
-        } else {
-            //initializeFromParams(savedInstanceState);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        //mSimilarTvShowsPresenter.start();
     }
 
     @Override
@@ -81,37 +66,9 @@ public class TvShowDetailFragment extends BaseFragment implements SimilarTvShows
                 getActivity().onBackPressed();
             }
         });
+        mTitle.setText("" + mTvShowId);
         return view;
 
     }
 
-    private void initializeDependencyInjector() {
-
-        PopularTvShowsApplication app = (PopularTvShowsApplication) getActivity().getApplication();
-
-        DaggerSimilarTvShowsComponent.builder()
-                                     .appComponent(app.getAppComponent())
-                                     .similarTvShowsModule(new SimilarTvShowsModule(mTvShowId))
-                                     .build().inject(this);
-    }
-
-    @Override
-    public void showSimilarTvShows(List<TvShow> similarTvShowList) {
-
-    }
-
-    @Override
-    public void showProgress() {
-
-    }
-
-    @Override
-    public void hideProgress() {
-
-    }
-
-    @Override
-    public void showError(String message) {
-
-    }
 }

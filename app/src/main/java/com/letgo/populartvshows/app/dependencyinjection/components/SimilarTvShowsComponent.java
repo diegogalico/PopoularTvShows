@@ -2,7 +2,7 @@ package com.letgo.populartvshows.app.dependencyinjection.components;
 
 import com.letgo.populartvshows.app.dependencyinjection.modules.SimilarTvShowsModule;
 import com.letgo.populartvshows.app.dependencyinjection.scopes.PerActivity;
-import com.letgo.populartvshows.presentation.ui.fragments.TvShowDetailFragment;
+import com.letgo.populartvshows.presentation.ui.activities.TvShowDetailActivity;
 
 import dagger.Component;
 
@@ -13,5 +13,5 @@ import dagger.Component;
 @Component(dependencies = AppComponent.class, modules = SimilarTvShowsModule.class)
 public interface SimilarTvShowsComponent {
 
-    void inject(TvShowDetailFragment tvShowDetailFragment);
+    void inject(TvShowDetailActivity tvShowDetailActivity);
 }

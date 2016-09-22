@@ -3,7 +3,6 @@ package com.letgo.populartvshows.presentation.presenters.impl;
 import android.util.Log;
 
 import com.letgo.populartvshows.domain.interactors.SimilarTvShowsInteractor;
-import com.letgo.populartvshows.domain.model.entities.TvShow;
 import com.letgo.populartvshows.domain.model.entities.TvShowsWrapper;
 import com.letgo.populartvshows.presentation.presenters.SimilarTvShowsPresenter;
 
@@ -41,6 +40,7 @@ public class SimilarTvShowsPresenterImpl implements SimilarTvShowsPresenter, Obs
     @Override
     public void onNext(TvShowsWrapper tvShowsWrapper) {
         mSimilarTvShowsView.hideProgress();
+        mSimilarTvShowsView.showSimilarTvShows(tvShowsWrapper.getTvShowInfo());
     }
 
     @Override
