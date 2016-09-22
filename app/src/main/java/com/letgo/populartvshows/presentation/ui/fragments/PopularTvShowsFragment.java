@@ -1,5 +1,6 @@
 package com.letgo.populartvshows.presentation.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -7,9 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.widget.ProgressBar;
-
 
 import com.letgo.populartvshows.R;
 import com.letgo.populartvshows.app.PopularTvShowsApplication;
@@ -19,8 +17,9 @@ import com.letgo.populartvshows.domain.model.entities.TvShow;
 import com.letgo.populartvshows.domain.model.entities.TvShowsWrapper;
 import com.letgo.populartvshows.presentation.presenters.PopularTvShowsPresenter;
 import com.letgo.populartvshows.presentation.presenters.impl.PopularTvShowsPresenterImpl;
+import com.letgo.populartvshows.presentation.ui.activities.TvShowDetailActivity;
 import com.letgo.populartvshows.presentation.ui.adapters.PopularTvShowsAdapter;
-import com.letgo.populartvshows.utils.RecyclerViewClickListener;
+import com.letgo.populartvshows.utils.RecyclerItemClickListener;
 
 import java.util.List;
 
@@ -34,13 +33,14 @@ import butterknife.Optional;
  * @author diego.galico
  */
 public class PopularTvShowsFragment extends BaseFragment implements
-        PopularTvShowsPresenter.PopularTvShowsView, RecyclerViewClickListener {
+        PopularTvShowsPresenter.PopularTvShowsView {
 
     private final static String BUNDLE_TV_SHOWS_WRAPPER = "tv_shows_wrapper";
     private PopularTvShowsAdapter mTvShowsAdapter;
     private GridLayoutManager mLinearLayout;
     boolean loading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private static final String TV_SHOW_ID = "tv_show_id";
 
     @Inject
     PopularTvShowsPresenterImpl mTvShowsPresenter;
@@ -109,7 +109,7 @@ public class PopularTvShowsFragment extends BaseFragment implements
         mLinearLayout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch(mTvShowsAdapter.getItemViewType(position)){
+                switch (mTvShowsAdapter.getItemViewType(position)) {
                     case 0:
                         return 1;
                     case 1:
@@ -141,6 +141,25 @@ public class PopularTvShowsFragment extends BaseFragment implements
                 }
             }
         });
+
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override public void onItemClick(View view, int position) {
+                        // do whatever
+                        Intent tvShowDetailActivityIntent = new Intent(
+                                getActivity(), TvShowDetailActivity.class);
+
+                        int tvShowID = mTvShowsAdapter.getTvShowsList().get(position).getId();
+                        tvShowDetailActivityIntent.putExtra(TV_SHOW_ID, tvShowID);
+
+                        startActivity(tvShowDetailActivityIntent);
+                    }
+
+                    @Override public void onLongItemClick(View view, int position) {
+                        // do whatever
+                    }
+                })
+        );
         return view;
     }
 
@@ -156,8 +175,6 @@ public class PopularTvShowsFragment extends BaseFragment implements
     @Override
     public void showPopularTvShows(List<TvShow> tvShowList) {
         mTvShowsAdapter = new PopularTvShowsAdapter(tvShowList);
-        mTvShowsAdapter.setRecyclerListListener(this);
-
         mRecyclerView.setAdapter(mTvShowsAdapter);
     }
 
@@ -184,11 +201,6 @@ public class PopularTvShowsFragment extends BaseFragment implements
 
     @Override
     public void showError(String message) {
-
-    }
-
-    @Override
-    public void onClick(View v, int position, float x, float y) {
 
     }
 

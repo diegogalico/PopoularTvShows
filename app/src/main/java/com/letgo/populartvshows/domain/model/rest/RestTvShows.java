@@ -6,6 +6,7 @@ import com.letgo.populartvshows.domain.model.entities.Configuration;
 import com.letgo.populartvshows.domain.model.entities.TvShowsWrapper;
 import com.letgo.populartvshows.presentation.presenters.impl.ConfigurationPresenterImpl;
 import com.letgo.populartvshows.presentation.presenters.impl.PopularTvShowsPresenterImpl;
+import com.letgo.populartvshows.presentation.presenters.impl.SimilarTvShowsPresenterImpl;
 
 import javax.inject.Inject;
 
@@ -43,7 +44,11 @@ public class RestTvShows implements RestData {
     }
 
     @Override
-    public void getTvShowDetail(String id) {
+    public void getSimilarTvShows(SimilarTvShowsPresenterImpl presenter, int tvShowId) {
+        Observable<TvShowsWrapper> configuration = mTheMovieApiInterface.getSimilarTvShows(tvShowId, Constants.API_KEY);
+        configuration.subscribeOn(Schedulers.newThread())
+                     .observeOn(AndroidSchedulers.mainThread())
+                     .subscribe(presenter);
 
     }
 }

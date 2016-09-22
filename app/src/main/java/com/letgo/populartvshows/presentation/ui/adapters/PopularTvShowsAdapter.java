@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.letgo.populartvshows.R;
 import com.letgo.populartvshows.app.Constants;
 import com.letgo.populartvshows.domain.model.entities.TvShow;
-import com.letgo.populartvshows.utils.RecyclerViewClickListener;
+import com.letgo.populartvshows.utils.RecyclerItemClickListener;
 import com.letgo.populartvshows.utils.StringUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -27,7 +27,6 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private Context mContext;
     private List<TvShow> mTvShows;
-    private RecyclerViewClickListener mRecyclerClickListener;
 
     public final int VIEW_TYPE_ITEM = 0;
     public final int VIEW_TYPE_LOADING = 1;
@@ -46,7 +45,7 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             this.mContext = viewGroup.getContext();
             View view = LayoutInflater.from(viewGroup.getContext())
                                       .inflate(R.layout.item_popular_tv_show, viewGroup, false);
-            return new TvShowViewHolder(view, mRecyclerClickListener);
+            return new TvShowViewHolder(view);
         } else if (viewType == VIEW_TYPE_LOADING) {
             View view = LayoutInflater.from(viewGroup.getContext())
                                       .inflate(R.layout.item_loading, viewGroup, false);
@@ -106,36 +105,22 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyDataSetChanged();
     }
 
-    public void setRecyclerListListener(RecyclerViewClickListener mRecyclerClickListener) {
-        this.mRecyclerClickListener = mRecyclerClickListener;
-    }
-
     @Override
     public int getItemCount() {
         return mTvShows.size();
     }
 
-    class TvShowViewHolder extends RecyclerView.ViewHolder implements View.OnTouchListener {
-        private final RecyclerViewClickListener onClickListener;
+    class TvShowViewHolder extends RecyclerView.ViewHolder{
+
         public ImageView itemTvShowCover;
         public TextView title;
         public TextView average;
 
-        public TvShowViewHolder(View itemView, RecyclerViewClickListener onClickListener) {
+        public TvShowViewHolder(View itemView) {
             super(itemView);
             itemTvShowCover = (ImageView) itemView.findViewById(R.id.item_tv_show_cover);
             title = (TextView) itemView.findViewById(R.id.title);
             average = (TextView) itemView.findViewById(R.id.average);
-            this.onClickListener = onClickListener;
-        }
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_UP && event.getAction() != MotionEvent.ACTION_MOVE) {
-
-                onClickListener.onClick(v, getPosition(), event.getX(), event.getY());
-            }
-            return true;
         }
     }
 
