@@ -2,7 +2,11 @@ package com.letgo.populartvshows.presentation.ui.activities;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.support.v7.widget.Toolbar;
 
+import com.google.gson.Gson;
 import com.letgo.populartvshows.R;
 import com.letgo.populartvshows.app.PopularTvShowsApplication;
 import com.letgo.populartvshows.app.dependencyinjection.components.DaggerSimilarTvShowsComponent;
@@ -11,7 +15,9 @@ import com.letgo.populartvshows.domain.model.entities.TvShow;
 import com.letgo.populartvshows.presentation.presenters.SimilarTvShowsPresenter;
 import com.letgo.populartvshows.presentation.presenters.impl.SimilarTvShowsPresenterImpl;
 import com.letgo.populartvshows.presentation.ui.adapters.SimilarTvShowsAdapter;
+import com.letgo.populartvshows.utils.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -25,8 +31,11 @@ import butterknife.Optional;
  */
 public class TvShowDetailActivity extends SecondLevelActivity implements SimilarTvShowsPresenter.SimilarTvShowsView {
 
+    private static final String TV_SHOW_OBJECT = "tv_show_object";
     private static final String TV_SHOW_ID = "tv_show_id";
+    private TvShow mTvShow;
     private int mTvShowId;
+    private List<TvShow> similarTvShowList = new ArrayList<>();
 
     private SimilarTvShowsAdapter mAdapter;
 
@@ -37,10 +46,21 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
     @InjectView(R.id.pager)
     ViewPager mPager;
 
+    @Optional
+    @InjectView(R.id.toolbar_detail)
+    Toolbar mToolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTvShowId = getIntent().getExtras().getInt(TV_SHOW_ID, 0);
+        Bundle extras = getIntent().getExtras();
+        String jsonMyObject = StringUtils.EMPTY_STRING;
+        if (extras != null) {
+            mTvShowId = extras.getInt(TV_SHOW_ID, 0);
+            jsonMyObject = extras.getString(TV_SHOW_OBJECT);
+        }
+        mTvShow = new Gson().fromJson(jsonMyObject, TvShow.class);
+        similarTvShowList.add(mTvShow);
         initializeDependencyInjector();
         ButterKnife.inject(this);
 
@@ -50,7 +70,18 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
             //initializeFromParams(savedInstanceState);
         }
 
-        mAdapter = new SimilarTvShowsAdapter(getSupportFragmentManager());
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //What to do on back clicked
+                onBackPressed();
+            }
+        });
+        mAdapter = new SimilarTvShowsAdapter(getSupportFragmentManager(), mTvShow);
+        mPager.setAdapter(mAdapter);
 
     }
 
@@ -72,10 +103,9 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
 
     @Override
     public void showSimilarTvShows(List<TvShow> similarTvShowList) {
-        mAdapter.setSimilarTvShowsCount(similarTvShowList.size());
+        similarTvShowList.addAll(similarTvShowList);
         mAdapter.setSimilarTvShows(similarTvShowList);
         mPager.setAdapter(mAdapter);
-
     }
 
     @Override

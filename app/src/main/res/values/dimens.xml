@@ -11,6 +11,6 @@
     <dimen name="card_corner">6dp</dimen>
     <dimen name="card_elevation">4dp</dimen>
 
-    <dimen name="tv_show_detail_height">248dp</dimen>
+    <dimen name="tv_show_detail_height">300dp</dimen>
 
 </resources>

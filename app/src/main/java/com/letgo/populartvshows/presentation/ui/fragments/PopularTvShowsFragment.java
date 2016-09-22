@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.gson.Gson;
 import com.letgo.populartvshows.R;
 import com.letgo.populartvshows.app.PopularTvShowsApplication;
 import com.letgo.populartvshows.app.dependencyinjection.components.DaggerTvShowsComponent;
@@ -40,6 +41,7 @@ public class PopularTvShowsFragment extends BaseFragment implements
     private GridLayoutManager mLinearLayout;
     boolean loading = true;
     int pastVisiblesItems, visibleItemCount, totalItemCount;
+    private static final String TV_SHOW_OBJECT = "tv_show_object";
     private static final String TV_SHOW_ID = "tv_show_id";
 
     @Inject
@@ -149,10 +151,11 @@ public class PopularTvShowsFragment extends BaseFragment implements
                         Intent tvShowDetailActivityIntent = new Intent(
                                 getActivity(), TvShowDetailActivity.class);
 
+                        TvShow tvShowObject = mTvShowsAdapter.getTvShowsList().get(position);
                         int tvShowID = mTvShowsAdapter.getTvShowsList().get(position).getId();
+                        tvShowDetailActivityIntent.putExtra(TV_SHOW_OBJECT, new Gson().toJson(tvShowObject));
                         tvShowDetailActivityIntent.putExtra(TV_SHOW_ID, tvShowID);
-
-                        startActivity(tvShowDetailActivityIntent);
+                        getActivity().startActivity(tvShowDetailActivityIntent);
                     }
 
                     @Override public void onLongItemClick(View view, int position) {

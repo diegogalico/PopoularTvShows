@@ -1,13 +1,21 @@
 package com.letgo.populartvshows.presentation.ui.fragments;
 
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.letgo.populartvshows.R;
+import com.letgo.populartvshows.app.Constants;
+import com.letgo.populartvshows.domain.model.entities.TvShow;
+import com.letgo.populartvshows.utils.StringUtils;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -18,23 +26,36 @@ import butterknife.Optional;
  */
 public class TvShowDetailFragment extends BaseFragment {
 
-    private int mTvShowId;
-    private static final String TV_SHOW_ID = "tv_show_id";
+    private TvShow mTvShow;
+
+    private static final String TV_SHOW_OBJECT = "tv_show_object";
 
     @Optional
     @InjectView(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
 
     @Optional
-    @InjectView(R.id.title_tv_show)
-    TextView mTitle;
+    @InjectView(R.id.overview)
+    TextView mOverview;
 
-    public static TvShowDetailFragment newInstance(int num) {
+    @Optional
+    @InjectView(R.id.vote_average)
+    TextView mVoteAverage;
+
+    @Optional
+    @InjectView(R.id.first_air_date)
+    TextView mFirstAirDate;
+
+    @Optional
+    @InjectView(R.id.tv_show_image)
+    ImageView mImage;
+
+    public static TvShowDetailFragment newInstance(TvShow tvShow) {
         TvShowDetailFragment tvShowDetailFragment = new TvShowDetailFragment();
 
         // Supply num input as an argument.
         Bundle args = new Bundle();
-        args.putInt(TV_SHOW_ID, num);
+        args.putString(TV_SHOW_OBJECT, new Gson().toJson(tvShow));
         tvShowDetailFragment.setArguments(args);
 
         return tvShowDetailFragment;
@@ -43,10 +64,8 @@ public class TvShowDetailFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mTvShowId = getArguments() != null ? getArguments().getInt(TV_SHOW_ID) : 1;
-        Bundle bundle = this.getArguments();
-        mTvShowId = bundle.getInt(TV_SHOW_ID, 0);
-
+        String jsonMyObject = getArguments() != null ? getArguments().getString(TV_SHOW_OBJECT) : StringUtils.EMPTY_STRING;
+        mTvShow = new Gson().fromJson(jsonMyObject, TvShow.class);
     }
 
     @Override
@@ -54,19 +73,28 @@ public class TvShowDetailFragment extends BaseFragment {
             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tv_show_detail, container, false);
         ButterKnife.inject(this, view);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayShowHomeEnabled(true);
-        mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //What to do on back clicked
-                getActivity().onBackPressed();
-            }
-        });
-        mTitle.setText("" + mTvShowId);
+
+        getActivity().setTitle(mTvShow.getName());
+
+        mOverview.setText(mTvShow.getOverview());
+        mVoteAverage.setText(StringUtils.EMPTY_STRING + mTvShow.getVoteAverage());
+        mFirstAirDate.setText(StringUtils.convertStringDate(mTvShow.getFirstAirDate()));
+
+        String imageUrl = Constants.IMAGE_URL_BACKDROP + mTvShow.getBackdropPath();
+        Picasso.with(getContext())
+               .load(imageUrl)
+               .fit().centerCrop()
+               .into(mImage, new Callback() {
+                   @Override
+                   public void onSuccess() {
+
+                   }
+
+                   @Override
+                   public void onError() {
+
+                   }
+               });
         return view;
 
     }
