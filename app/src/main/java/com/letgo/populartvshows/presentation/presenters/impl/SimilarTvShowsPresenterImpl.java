@@ -1,7 +1,5 @@
 package com.letgo.populartvshows.presentation.presenters.impl;
 
-import android.util.Log;
-
 import com.letgo.populartvshows.domain.interactors.SimilarTvShowsInteractor;
 import com.letgo.populartvshows.domain.model.entities.TvShowsWrapper;
 import com.letgo.populartvshows.presentation.presenters.SimilarTvShowsPresenter;
@@ -36,7 +34,11 @@ public class SimilarTvShowsPresenterImpl implements SimilarTvShowsPresenter, Obs
 
     @Override
     public final void onError(Throwable e) {
-        mSimilarTvShowsView.showError(ApiStatusCode.getApiStatusByCode(((HttpException) e).code()));
+        try {
+            mSimilarTvShowsView.showError(ApiStatusCode.getApiStatusByCode(((HttpException) e).code()));
+        } catch (Exception exc) {
+            mSimilarTvShowsView.showError(e.getMessage());
+        }
     }
 
     @Override

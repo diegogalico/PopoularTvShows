@@ -2,11 +2,10 @@ package com.letgo.populartvshows.presentation.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -16,7 +15,6 @@ import com.letgo.populartvshows.app.dependencyinjection.components.DaggerConfigu
 import com.letgo.populartvshows.app.dependencyinjection.modules.ConfigurationModule;
 import com.letgo.populartvshows.presentation.presenters.ConfigurationPresenter;
 import com.letgo.populartvshows.presentation.presenters.impl.ConfigurationPresenterImpl;
-import com.letgo.populartvshows.presentation.ui.BaseView;
 import com.letgo.populartvshows.presentation.ui.activities.PopularTvShowsActivity;
 import com.letgo.populartvshows.utils.NetworkUtils;
 import com.letgo.populartvshows.utils.StringUtils;
@@ -51,6 +49,10 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     @InjectView(R.id.error_subtitle)
     TextView mErrorSubtitle;
 
+    @Optional
+    @InjectView(R.id.retry)
+    Button mRetry;
+
     public static SplashFragment newInstance() {
         SplashFragment splashFragment = new SplashFragment();
         return splashFragment;
@@ -67,22 +69,21 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_splash, container, false);
         ButterKnife.inject(this, view);
-
+        mRetry.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (NetworkUtils.hasNetwork(getContext())) {
+                    mConfigurationPresenter.start();
+                    mLinearLayoutError.setVisibility(View.GONE);
+                }
+            }
+        });
         return view;
     }
 
     @Override
     public void onStart() {
-
         super.onStart();
-        if (NetworkUtils.hasNetwork(getContext())) {
-            mConfigurationPresenter.start();
-        }else{
-            hideProgress();
-            mLinearLayoutError.setVisibility(View.VISIBLE);
-        }
-
-
+        mConfigurationPresenter.start();
     }
 
     private void initializeDependencyInjector() {
@@ -103,7 +104,6 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     @Override
     public void hideProgress() {
         mProgressBar.setVisibility(View.GONE);
-
     }
 
     @Override
@@ -115,6 +115,7 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
         mErrorTitle.setText(title);
         mErrorSubtitle.setText(subtitle);
         mLinearLayoutError.setVisibility(View.VISIBLE);
+        hideProgress();
     }
 
     @Override

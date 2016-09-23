@@ -2,11 +2,8 @@ package com.letgo.populartvshows.presentation.ui.activities;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.support.v7.widget.Toolbar;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.view.View;
 
 import com.google.gson.Gson;
 import com.letgo.populartvshows.R;
@@ -31,13 +28,13 @@ import butterknife.Optional;
 /**
  * @author diego.galico
  */
-public class TvShowDetailActivity extends SecondLevelActivity implements SimilarTvShowsPresenter.SimilarTvShowsView {
+public class TvShowDetailActivity extends SecondLevelActivity implements SimilarTvShowsPresenter.SimilarTvShowsView, ViewPager.OnPageChangeListener {
 
     private static final String TV_SHOW_OBJECT = "tv_show_object";
     private static final String TV_SHOW_ID = "tv_show_id";
     private TvShow mTvShow;
     private int mTvShowId;
-    private List<TvShow> similarTvShowList = new ArrayList<>();
+    private List<TvShow> mSimilarTvShowList = new ArrayList<>();
 
     private SimilarTvShowsAdapter mAdapter;
 
@@ -52,18 +49,6 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
     @InjectView(R.id.toolbar_detail)
     Toolbar mToolbar;
 
-    @Optional
-    @InjectView(R.id.layout_error_detail)
-    LinearLayout mLinearLayoutError;
-
-    @Optional
-    @InjectView(R.id.error_title)
-    TextView mErrorTitle;
-
-    @Optional
-    @InjectView(R.id.error_subtitle)
-    TextView mErrorSubtitle;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +59,7 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
             jsonMyObject = extras.getString(TV_SHOW_OBJECT);
         }
         mTvShow = new Gson().fromJson(jsonMyObject, TvShow.class);
-        similarTvShowList.add(mTvShow);
+        mSimilarTvShowList.add(mTvShow);
         initializeDependencyInjector();
         ButterKnife.inject(this);
 
@@ -94,8 +79,10 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
                 onBackPressed();
             }
         });
+        setTitle(mTvShow.getName());
         mAdapter = new SimilarTvShowsAdapter(getSupportFragmentManager(), mTvShow);
         mPager.setAdapter(mAdapter);
+        mPager.setOnPageChangeListener(this);
 
     }
 
@@ -117,7 +104,7 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
 
     @Override
     public void showSimilarTvShows(List<TvShow> similarTvShowList) {
-        similarTvShowList.addAll(similarTvShowList);
+        mSimilarTvShowList.addAll(similarTvShowList);
         mAdapter.setSimilarTvShows(similarTvShowList);
         mPager.setAdapter(mAdapter);
     }
@@ -134,13 +121,7 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
 
     @Override
     public void showError(String message) {
-        String[] parts = StringUtils.splitString(message);
-        String title = parts[0];
-        String subtitle = parts[1];
 
-        mErrorTitle.setText(title);
-        mErrorSubtitle.setText(subtitle);
-        mLinearLayoutError.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -148,4 +129,18 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
         return R.layout.activity_similar_tv_shows_pager;
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        setTitle(mSimilarTvShowList.get(position).getName());
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
 }

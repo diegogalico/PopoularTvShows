@@ -35,7 +35,11 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, Obs
 
     @Override
     public final void onError(Throwable e) {
-        mTvShowsView.showError(ApiStatusCode.getApiStatusByCode(((HttpException) e).code()));
+        try {
+            mTvShowsView.showError(ApiStatusCode.getApiStatusByCode(((HttpException) e).code()));
+        } catch (Exception exc) {
+            mTvShowsView.showError(e.getMessage());
+        }
     }
 
     @Override

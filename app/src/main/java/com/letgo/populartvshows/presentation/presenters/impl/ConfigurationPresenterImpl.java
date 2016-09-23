@@ -1,11 +1,8 @@
 package com.letgo.populartvshows.presentation.presenters.impl;
 
-import android.util.Log;
-
 import com.letgo.populartvshows.domain.interactors.ConfigurationInteractor;
 import com.letgo.populartvshows.domain.model.entities.Configuration;
 import com.letgo.populartvshows.presentation.presenters.ConfigurationPresenter;
-import com.letgo.populartvshows.presentation.ui.BaseView;
 import com.letgo.populartvshows.utils.ApiStatusCode;
 
 import javax.inject.Inject;
@@ -14,7 +11,7 @@ import retrofit2.adapter.rxjava.HttpException;
 import rx.Observer;
 
 /**
- * Created by diego.galico on 21/09/2016.
+ * @author diego.galico
  */
 
 public class ConfigurationPresenterImpl implements ConfigurationPresenter, Observer<Configuration> {
@@ -38,7 +35,12 @@ public class ConfigurationPresenterImpl implements ConfigurationPresenter, Obser
 
     @Override
     public final void onError(Throwable e) {
-        mConfigurationView.showError(ApiStatusCode.getApiStatusByCode(((HttpException) e).code()));
+        try {
+            mConfigurationView.showError(ApiStatusCode.getApiStatusByCode(((HttpException) e).code()));
+        } catch (Exception exc) {
+            mConfigurationView.showError(e.getMessage());
+        }
+
     }
 
     @Override

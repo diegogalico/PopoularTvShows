@@ -1,8 +1,6 @@
 package com.letgo.populartvshows.presentation.ui.fragments;
 
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,8 +72,6 @@ public class TvShowDetailFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_tv_show_detail, container, false);
         ButterKnife.inject(this, view);
 
-        getActivity().setTitle(mTvShow.getName());
-
         mOverview.setText(mTvShow.getOverview());
         mVoteAverage.setText(StringUtils.EMPTY_STRING + mTvShow.getVoteAverage());
         mFirstAirDate.setText(StringUtils.convertStringDate(mTvShow.getFirstAirDate()));
@@ -83,6 +79,7 @@ public class TvShowDetailFragment extends BaseFragment {
         String imageUrl = Constants.IMAGE_URL_BACKDROP + mTvShow.getBackdropPath();
         Picasso.with(getContext())
                .load(imageUrl)
+               .placeholder(R.drawable.ic_placeholder)
                .fit().centerCrop()
                .into(mImage, new Callback() {
                    @Override

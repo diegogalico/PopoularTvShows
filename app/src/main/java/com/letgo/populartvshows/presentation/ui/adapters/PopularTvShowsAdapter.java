@@ -3,7 +3,6 @@ package com.letgo.populartvshows.presentation.ui.adapters;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -13,7 +12,6 @@ import android.widget.TextView;
 import com.letgo.populartvshows.R;
 import com.letgo.populartvshows.app.Constants;
 import com.letgo.populartvshows.domain.model.entities.TvShow;
-import com.letgo.populartvshows.utils.RecyclerItemClickListener;
 import com.letgo.populartvshows.utils.StringUtils;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -99,10 +97,14 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     public void appendTvShows(List<TvShow> tvShowList) {
         //Remove loading item
-        mTvShows.remove(mTvShows.size() - 1);
-        notifyItemRemoved(mTvShows.size());
+        removeLoading();
         mTvShows.addAll(tvShowList);
         notifyDataSetChanged();
+    }
+
+    public void removeLoading(){
+        mTvShows.remove(mTvShows.size() - 1);
+        notifyItemRemoved(mTvShows.size());
     }
 
     @Override

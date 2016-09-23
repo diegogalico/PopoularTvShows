@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -71,6 +72,11 @@ public class PopularTvShowsFragment extends BaseFragment implements
     @InjectView(R.id.error_subtitle)
     TextView mErrorSubtitle;
 
+    @Optional
+    @InjectView(R.id.retry)
+    Button mRetry;
+
+
     public static PopularTvShowsFragment newInstance() {
         PopularTvShowsFragment popularTvShowsFragment = new PopularTvShowsFragment();
         return popularTvShowsFragment;
@@ -122,7 +128,16 @@ public class PopularTvShowsFragment extends BaseFragment implements
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
 
-        if(NetworkUtils.hasNetwork(getContext())){
+        mRetry.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (NetworkUtils.hasNetwork(getContext())) {
+                    mTvShowsPresenter.start();
+                    mLinearLayoutError.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        if (NetworkUtils.hasNetwork(getContext())) {
             mLinearLayout = new GridLayoutManager(getActivity(), 2);
 
             mLinearLayout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -162,8 +177,9 @@ public class PopularTvShowsFragment extends BaseFragment implements
             });
 
             mRecyclerView.addOnItemTouchListener(
-                    new RecyclerItemClickListener(getContext(), mRecyclerView ,new RecyclerItemClickListener.OnItemClickListener() {
-                        @Override public void onItemClick(View view, int position) {
+                    new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(View view, int position) {
                             // do whatever
                             Intent tvShowDetailActivityIntent = new Intent(
                                     getActivity(), TvShowDetailActivity.class);
@@ -175,12 +191,13 @@ public class PopularTvShowsFragment extends BaseFragment implements
                             getActivity().startActivity(tvShowDetailActivityIntent);
                         }
 
-                        @Override public void onLongItemClick(View view, int position) {
+                        @Override
+                        public void onLongItemClick(View view, int position) {
                             // do whatever
                         }
                     })
             );
-        }else{
+        } else {
             mLinearLayoutError.setVisibility(View.VISIBLE);
         }
 
@@ -225,13 +242,20 @@ public class PopularTvShowsFragment extends BaseFragment implements
 
     @Override
     public void showError(String message) {
-        String[] parts = StringUtils.splitString(message);
-        String title = parts[0];
-        String subtitle = parts[1];
+        if (!loading) {
+            mTvShowsAdapter.removeLoading();
+            loading = true;
+        } else {
+            String[] parts = StringUtils.splitString(message);
+            String title = parts[0];
+            String subtitle = parts[1];
 
-        mErrorTitle.setText(title);
-        mErrorSubtitle.setText(subtitle);
-        mLinearLayoutError.setVisibility(View.VISIBLE);
+            mErrorTitle.setText(title);
+            mErrorSubtitle.setText(subtitle);
+            mLinearLayoutError.setVisibility(View.VISIBLE);
+            hideProgress();
+        }
+
     }
 
 }
