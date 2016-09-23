@@ -21,6 +21,10 @@
 
     </android.support.v7.widget.Toolbar>
 
+    <include
+        android:id="@+id/layout_error"
+        layout="@layout/error_screen"
+        android:visibility="gone"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view_popular_tv_shows"

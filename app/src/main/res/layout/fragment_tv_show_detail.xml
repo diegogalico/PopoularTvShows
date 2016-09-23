@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <ScrollView
         android:id="@+id/activity_detail_scroll"
         android:layout_width="match_parent"

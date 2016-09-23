@@ -9,6 +9,7 @@ import java.util.Date;
  */
 public class StringUtils {
     public static final String EMPTY_STRING = "";
+    public static final String COLON_STRING = ":";
 
     public static String convertStringDate(String dateString) {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -22,5 +23,10 @@ public class StringUtils {
         }
 
         return fmtOut.format(date);
+    }
+
+    public static String[] splitString(String stringToSplit){
+        String[] parts = stringToSplit.split(COLON_STRING);
+        return parts;
     }
 }

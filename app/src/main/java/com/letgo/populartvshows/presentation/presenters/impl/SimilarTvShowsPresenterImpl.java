@@ -5,9 +5,11 @@ import android.util.Log;
 import com.letgo.populartvshows.domain.interactors.SimilarTvShowsInteractor;
 import com.letgo.populartvshows.domain.model.entities.TvShowsWrapper;
 import com.letgo.populartvshows.presentation.presenters.SimilarTvShowsPresenter;
+import com.letgo.populartvshows.utils.ApiStatusCode;
 
 import javax.inject.Inject;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observer;
 
 /**
@@ -34,7 +36,7 @@ public class SimilarTvShowsPresenterImpl implements SimilarTvShowsPresenter, Obs
 
     @Override
     public final void onError(Throwable e) {
-        Log.e("TvShowDetail", e.getMessage());
+        mSimilarTvShowsView.showError(ApiStatusCode.getApiStatusByCode(((HttpException) e).code()));
     }
 
     @Override

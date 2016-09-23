@@ -1,13 +1,13 @@
 package com.letgo.populartvshows.presentation.presenters.impl;
 
-import android.util.Log;
-
 import com.letgo.populartvshows.domain.interactors.TvShowsInteractor;
 import com.letgo.populartvshows.domain.model.entities.TvShowsWrapper;
 import com.letgo.populartvshows.presentation.presenters.PopularTvShowsPresenter;
+import com.letgo.populartvshows.utils.ApiStatusCode;
 
 import javax.inject.Inject;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observer;
 
 /**
@@ -35,11 +35,12 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, Obs
 
     @Override
     public final void onError(Throwable e) {
-        Log.e("PopularTvShows", e.getMessage());
+        mTvShowsView.showError(ApiStatusCode.getApiStatusByCode(((HttpException) e).code()));
     }
 
     @Override
     public final void onNext(TvShowsWrapper tvShowsWrapper) {
+
         if (mTvShowsView.isTheListEmpty()) {
             mTvShowsView.hideProgress();
             mTvShowsView.showPopularTvShows(tvShowsWrapper.getTvShowInfo());

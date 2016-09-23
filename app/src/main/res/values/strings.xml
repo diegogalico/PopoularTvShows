@@ -3,4 +3,7 @@
     <string name="overview_label">OVERVIEW</string>
     <string name="vote_average_label">VOTE AVERAGE</string>
     <string name="first_air_date_label">FIRST AIR DATE</string>
+    <string name="connection_error_title">No network!</string>
+    <string name="connection_error_subtitle">Please check your connection</string>
+    <string name="error_retry">Retry</string>
 </resources>

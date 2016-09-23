@@ -7,6 +7,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.letgo.populartvshows.R;
 import com.letgo.populartvshows.app.PopularTvShowsApplication;
@@ -16,6 +18,8 @@ import com.letgo.populartvshows.presentation.presenters.ConfigurationPresenter;
 import com.letgo.populartvshows.presentation.presenters.impl.ConfigurationPresenterImpl;
 import com.letgo.populartvshows.presentation.ui.BaseView;
 import com.letgo.populartvshows.presentation.ui.activities.PopularTvShowsActivity;
+import com.letgo.populartvshows.utils.NetworkUtils;
+import com.letgo.populartvshows.utils.StringUtils;
 
 import javax.inject.Inject;
 
@@ -35,6 +39,18 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     @InjectView(R.id.progress_bar)
     View mProgressBar;
 
+    @Optional
+    @InjectView(R.id.layout_error_splash)
+    LinearLayout mLinearLayoutError;
+
+    @Optional
+    @InjectView(R.id.error_title)
+    TextView mErrorTitle;
+
+    @Optional
+    @InjectView(R.id.error_subtitle)
+    TextView mErrorSubtitle;
+
     public static SplashFragment newInstance() {
         SplashFragment splashFragment = new SplashFragment();
         return splashFragment;
@@ -51,6 +67,7 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_splash, container, false);
         ButterKnife.inject(this, view);
+
         return view;
     }
 
@@ -58,7 +75,14 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     public void onStart() {
 
         super.onStart();
-        mConfigurationPresenter.start();
+        if (NetworkUtils.hasNetwork(getContext())) {
+            mConfigurationPresenter.start();
+        }else{
+            hideProgress();
+            mLinearLayoutError.setVisibility(View.VISIBLE);
+        }
+
+
     }
 
     private void initializeDependencyInjector() {
@@ -84,7 +108,13 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
 
     @Override
     public void showError(String message) {
+        String[] parts = StringUtils.splitString(message);
+        String title = parts[0];
+        String subtitle = parts[1];
 
+        mErrorTitle.setText(title);
+        mErrorSubtitle.setText(subtitle);
+        mLinearLayoutError.setVisibility(View.VISIBLE);
     }
 
     @Override

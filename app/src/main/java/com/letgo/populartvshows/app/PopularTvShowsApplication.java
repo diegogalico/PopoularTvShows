@@ -16,7 +16,9 @@ import com.letgo.populartvshows.app.dependencyinjection.modules.AppModule;
 import com.letgo.populartvshows.app.dependencyinjection.modules.DomainModule;
 import com.letgo.populartvshows.app.dependencyinjection.modules.NetworkModule;
 import com.letgo.populartvshows.app.dependencyinjection.modules.TheMovieModule;
+import com.letgo.populartvshows.utils.NetworkUtils;
 
+import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import timber.log.Timber;
 import timber.log.Timber.DebugTree;
 
@@ -47,6 +49,8 @@ public class PopularTvShowsApplication extends Application {
         Crittercism.initialize(this, Constants.CRITTERCISM_API_KEY);
         // initiate Timber
         Timber.plant(new DebugTree());
+        //Install CustomActivityOnCrash
+        CustomActivityOnCrash.install(this);
 
         mNetworkComponent = DaggerNetworkComponent.builder()
                                                   // list of modules that are part of this component need to be created here too
@@ -75,12 +79,7 @@ public class PopularTvShowsApplication extends Application {
     }
 
     public boolean hasNetwork() {
-        return checkIfHasNetwork();
+        return NetworkUtils.hasNetwork(this);
     }
 
-    private boolean checkIfHasNetwork() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.isConnected();
-    }
 }

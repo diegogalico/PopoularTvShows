@@ -5,6 +5,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.support.v7.widget.Toolbar;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.letgo.populartvshows.R;
@@ -49,6 +51,18 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
     @Optional
     @InjectView(R.id.toolbar_detail)
     Toolbar mToolbar;
+
+    @Optional
+    @InjectView(R.id.layout_error_detail)
+    LinearLayout mLinearLayoutError;
+
+    @Optional
+    @InjectView(R.id.error_title)
+    TextView mErrorTitle;
+
+    @Optional
+    @InjectView(R.id.error_subtitle)
+    TextView mErrorSubtitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,7 +134,13 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
 
     @Override
     public void showError(String message) {
+        String[] parts = StringUtils.splitString(message);
+        String title = parts[0];
+        String subtitle = parts[1];
 
+        mErrorTitle.setText(title);
+        mErrorSubtitle.setText(subtitle);
+        mLinearLayoutError.setVisibility(View.VISIBLE);
     }
 
     @Override
