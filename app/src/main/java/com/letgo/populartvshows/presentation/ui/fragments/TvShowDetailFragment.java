@@ -51,7 +51,6 @@ public class TvShowDetailFragment extends BaseFragment {
     public static TvShowDetailFragment newInstance(TvShow tvShow) {
         TvShowDetailFragment tvShowDetailFragment = new TvShowDetailFragment();
 
-        // Supply num input as an argument.
         Bundle args = new Bundle();
         args.putString(TV_SHOW_OBJECT, new Gson().toJson(tvShow));
         tvShowDetailFragment.setArguments(args);

@@ -17,7 +17,6 @@ import com.letgo.populartvshows.presentation.presenters.ConfigurationPresenter;
 import com.letgo.populartvshows.presentation.presenters.impl.ConfigurationPresenterImpl;
 import com.letgo.populartvshows.presentation.ui.activities.PopularTvShowsActivity;
 import com.letgo.populartvshows.utils.NetworkUtils;
-import com.letgo.populartvshows.utils.StringUtils;
 
 import javax.inject.Inject;
 
@@ -40,10 +39,6 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     @Optional
     @InjectView(R.id.layout_error_splash)
     LinearLayout mLinearLayoutError;
-
-    @Optional
-    @InjectView(R.id.error_title)
-    TextView mErrorTitle;
 
     @Optional
     @InjectView(R.id.error_subtitle)
@@ -108,14 +103,8 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
 
     @Override
     public void showError(String message) {
-        String[] parts = StringUtils.splitString(message);
-        String title = parts[0];
-        String subtitle = parts[1];
-
-        mErrorTitle.setText(title);
-        mErrorSubtitle.setText(subtitle);
+        mErrorSubtitle.setText(message);
         mLinearLayoutError.setVisibility(View.VISIBLE);
-        hideProgress();
     }
 
     @Override

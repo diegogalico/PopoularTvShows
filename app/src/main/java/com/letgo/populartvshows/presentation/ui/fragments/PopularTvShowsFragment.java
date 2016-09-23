@@ -2,9 +2,11 @@ package com.letgo.populartvshows.presentation.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,6 @@ import com.letgo.populartvshows.presentation.ui.activities.TvShowDetailActivity;
 import com.letgo.populartvshows.presentation.ui.adapters.PopularTvShowsAdapter;
 import com.letgo.populartvshows.utils.NetworkUtils;
 import com.letgo.populartvshows.utils.RecyclerItemClickListener;
-import com.letgo.populartvshows.utils.StringUtils;
 
 import java.util.List;
 
@@ -57,16 +58,16 @@ public class PopularTvShowsFragment extends BaseFragment implements
     android.support.v7.widget.Toolbar mToolbar;
 
     @Optional
+    @InjectView(R.id.progress_bar)
+    View mProgressBar;
+
+    @Optional
     @InjectView(R.id.recycler_view_popular_tv_shows)
     RecyclerView mRecyclerView;
 
     @Optional
     @InjectView(R.id.layout_error)
     LinearLayout mLinearLayoutError;
-
-    @Optional
-    @InjectView(R.id.error_title)
-    TextView mErrorTitle;
 
     @Optional
     @InjectView(R.id.error_subtitle)
@@ -114,10 +115,17 @@ public class PopularTvShowsFragment extends BaseFragment implements
         mTvShowsPresenter.start();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!NetworkUtils.hasNetwork(getContext())) {
+            showSnackBar();
+        }
+    }
+
     private void initializeFromParams(Bundle savedInstanceState) {
         TvShowsWrapper tvShowsWrapper = (TvShowsWrapper) savedInstanceState
                 .getSerializable(BUNDLE_TV_SHOWS_WRAPPER);
-        mTvShowsPresenter.onNext(tvShowsWrapper);
     }
 
     @Override
@@ -131,75 +139,75 @@ public class PopularTvShowsFragment extends BaseFragment implements
         mRetry.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (NetworkUtils.hasNetwork(getContext())) {
-                    mTvShowsPresenter.start();
                     mLinearLayoutError.setVisibility(View.GONE);
+                    if (isTheListEmpty()) {
+                        mTvShowsPresenter.start();
+                    }
                 }
             }
         });
 
-        if (NetworkUtils.hasNetwork(getContext())) {
-            mLinearLayout = new GridLayoutManager(getActivity(), 2);
 
-            mLinearLayout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-                @Override
-                public int getSpanSize(int position) {
-                    switch (mTvShowsAdapter.getItemViewType(position)) {
-                        case 0:
-                            return 1;
-                        case 1:
-                            return 2; //number of columns of the grid
-                        default:
-                            return -1;
+        mLinearLayout = new GridLayoutManager(getActivity(), 2);
+
+        mLinearLayout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                switch (mTvShowsAdapter.getItemViewType(position)) {
+                    case 0:
+                        return 1;
+                    case 1:
+                        return 2; //number of columns of the grid
+                    default:
+                        return -1;
+                }
+            }
+        });
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(mLinearLayout);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    visibleItemCount = mLinearLayout.getChildCount();
+                    totalItemCount = mLinearLayout.getItemCount();
+                    pastVisiblesItems = mLinearLayout.findFirstVisibleItemPosition();
+
+                    if (loading) {
+                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                            loading = false;
+                            //Do pagination
+                            mTvShowsAdapter.loadMore();
+                            mTvShowsPresenter.showMoreTvShows();
+                        }
                     }
                 }
-            });
-            mRecyclerView.setHasFixedSize(true);
-            mRecyclerView.setLayoutManager(mLinearLayout);
+            }
+        });
 
-            mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                @Override
-                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                    if (dy > 0) {
-                        visibleItemCount = mLinearLayout.getChildCount();
-                        totalItemCount = mLinearLayout.getItemCount();
-                        pastVisiblesItems = mLinearLayout.findFirstVisibleItemPosition();
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        // do whatever
+                        Intent tvShowDetailActivityIntent = new Intent(
+                                getActivity(), TvShowDetailActivity.class);
 
-                        if (loading) {
-                            if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
-                                loading = false;
-                                //Do pagination
-                                mTvShowsAdapter.loadMore();
-                                mTvShowsPresenter.showMoreTvShows();
-                            }
-                        }
+                        TvShow tvShowObject = mTvShowsAdapter.getTvShowsList().get(position);
+                        int tvShowID = mTvShowsAdapter.getTvShowsList().get(position).getId();
+                        tvShowDetailActivityIntent.putExtra(TV_SHOW_OBJECT, new Gson().toJson(tvShowObject));
+                        tvShowDetailActivityIntent.putExtra(TV_SHOW_ID, tvShowID);
+                        getActivity().startActivity(tvShowDetailActivityIntent);
                     }
-                }
-            });
 
-            mRecyclerView.addOnItemTouchListener(
-                    new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(View view, int position) {
-                            // do whatever
-                            Intent tvShowDetailActivityIntent = new Intent(
-                                    getActivity(), TvShowDetailActivity.class);
+                    @Override
+                    public void onLongItemClick(View view, int position) {
+                        // do whatever
+                    }
+                })
+        );
 
-                            TvShow tvShowObject = mTvShowsAdapter.getTvShowsList().get(position);
-                            int tvShowID = mTvShowsAdapter.getTvShowsList().get(position).getId();
-                            tvShowDetailActivityIntent.putExtra(TV_SHOW_OBJECT, new Gson().toJson(tvShowObject));
-                            tvShowDetailActivityIntent.putExtra(TV_SHOW_ID, tvShowID);
-                            getActivity().startActivity(tvShowDetailActivityIntent);
-                        }
-
-                        @Override
-                        public void onLongItemClick(View view, int position) {
-                            // do whatever
-                        }
-                    })
-            );
-        } else {
-            mLinearLayoutError.setVisibility(View.VISIBLE);
-        }
 
         return view;
     }
@@ -217,6 +225,7 @@ public class PopularTvShowsFragment extends BaseFragment implements
     public void showPopularTvShows(List<TvShow> tvShowList) {
         mTvShowsAdapter = new PopularTvShowsAdapter(tvShowList);
         mRecyclerView.setAdapter(mTvShowsAdapter);
+        mLinearLayoutError.setVisibility(View.GONE);
     }
 
     @Override
@@ -228,16 +237,17 @@ public class PopularTvShowsFragment extends BaseFragment implements
     public void appendPopularTvShows(List<TvShow> tvShowList) {
         loading = true;
         mTvShowsAdapter.appendTvShows(tvShowList);
+        mLinearLayoutError.setVisibility(View.GONE);
     }
 
     @Override
     public void showProgress() {
-
+        mProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
-
+        mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
@@ -246,16 +256,18 @@ public class PopularTvShowsFragment extends BaseFragment implements
             mTvShowsAdapter.removeLoading();
             loading = true;
         } else {
-            String[] parts = StringUtils.splitString(message);
-            String title = parts[0];
-            String subtitle = parts[1];
-
-            mErrorTitle.setText(title);
-            mErrorSubtitle.setText(subtitle);
+            mErrorSubtitle.setText(message);
             mLinearLayoutError.setVisibility(View.VISIBLE);
-            hideProgress();
         }
+        hideProgress();
+    }
 
+    private void showSnackBar() {
+        Snackbar snack = Snackbar.make(mRecyclerView, getResources().getString(R.string.snack_bar_message), Snackbar.LENGTH_LONG);
+        View view = snack.getView();
+        TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
+        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        snack.show();
     }
 
 }

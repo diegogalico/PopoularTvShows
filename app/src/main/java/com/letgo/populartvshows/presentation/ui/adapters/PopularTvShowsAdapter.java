@@ -102,6 +102,11 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         notifyDataSetChanged();
     }
 
+    public void append(List<TvShow> tvShowList) {
+        mTvShows.addAll(tvShowList);
+        notifyDataSetChanged();
+    }
+
     public void removeLoading(){
         mTvShows.remove(mTvShows.size() - 1);
         notifyItemRemoved(mTvShows.size());

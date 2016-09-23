@@ -2,8 +2,6 @@ package com.letgo.populartvshows.app;
 
 import android.app.Application;
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 import com.crittercism.app.Crittercism;
 import com.letgo.populartvshows.app.dependencyinjection.components.AppComponent;
@@ -49,7 +47,7 @@ public class PopularTvShowsApplication extends Application {
         Crittercism.initialize(this, Constants.CRITTERCISM_API_KEY);
         // initiate Timber
         Timber.plant(new DebugTree());
-        //Install CustomActivityOnCrash
+        //install CustomActivityOnCrash
         CustomActivityOnCrash.install(this);
 
         mNetworkComponent = DaggerNetworkComponent.builder()
@@ -77,6 +75,7 @@ public class PopularTvShowsApplication extends Application {
 
         return mAppComponent;
     }
+
 
     public boolean hasNetwork() {
         return NetworkUtils.hasNetwork(this);

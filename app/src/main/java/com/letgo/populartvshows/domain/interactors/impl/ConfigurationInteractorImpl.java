@@ -10,10 +10,15 @@ import com.letgo.populartvshows.utils.StringUtils;
 
 import javax.inject.Inject;
 
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 /**
  * @author diego.galico
  */
-public class ConfigurationInteractorImpl implements ConfigurationInteractor {
+public class ConfigurationInteractorImpl implements ConfigurationInteractor, Observer<Configuration> {
 
     private final RestData mRestData;
     private ConfigurationPresenterImpl mConfigurationPresenter;
@@ -25,11 +30,12 @@ public class ConfigurationInteractorImpl implements ConfigurationInteractor {
 
     @Override
     public void requestConfiguration() {
-        mRestData.getConfiguration(mConfigurationPresenter);
+        mRestData.getConfiguration(this);
     }
 
-    public void setPresenter(ConfigurationPresenterImpl configurationPresenter) {
-        this.mConfigurationPresenter = configurationPresenter;
+    @Override
+    public void setPresenter(ConfigurationPresenterImpl presenter) {
+        mConfigurationPresenter = presenter;
     }
 
     @Override
@@ -56,4 +62,20 @@ public class ConfigurationInteractorImpl implements ConfigurationInteractor {
     public void execute() {
         requestConfiguration();
     }
+
+    @Override
+    public void onCompleted() {
+
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        mConfigurationPresenter.onErrorResponse(e.getMessage());
+    }
+
+    @Override
+    public void onNext(Configuration configuration) {
+        mConfigurationPresenter.onConfigurationResponse(configuration);
+    }
+
 }

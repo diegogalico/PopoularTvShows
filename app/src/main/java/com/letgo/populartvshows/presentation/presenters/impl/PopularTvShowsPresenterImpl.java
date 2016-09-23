@@ -1,27 +1,25 @@
 package com.letgo.populartvshows.presentation.presenters.impl;
 
 import com.letgo.populartvshows.domain.interactors.TvShowsInteractor;
-import com.letgo.populartvshows.domain.model.entities.TvShowsWrapper;
+import com.letgo.populartvshows.domain.model.entities.TvShow;
 import com.letgo.populartvshows.presentation.presenters.PopularTvShowsPresenter;
-import com.letgo.populartvshows.utils.ApiStatusCode;
+
+import java.util.List;
 
 import javax.inject.Inject;
-
-import retrofit2.adapter.rxjava.HttpException;
-import rx.Observer;
 
 /**
  * @author diego.galico
  */
-public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, Observer<TvShowsWrapper> {
+public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, TvShowsInteractor.PopularTvShowsResponse {
 
     private PopularTvShowsView mTvShowsView;
     private boolean mIsLoading = false;
-    private TvShowsInteractor mGetPopularTvShows;
+    private TvShowsInteractor mGetPopularTvShowsInteractor;
 
     @Inject
-    public PopularTvShowsPresenterImpl(TvShowsInteractor getPopularTvShows) {
-        mGetPopularTvShows = getPopularTvShows;
+    public PopularTvShowsPresenterImpl(TvShowsInteractor getPopularTvShowsInteractor) {
+        mGetPopularTvShowsInteractor = getPopularTvShowsInteractor;
     }
 
     public void attachView(PopularTvShowsView tvShowsView) {
@@ -29,43 +27,37 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, Obs
     }
 
     @Override
-    public final void onCompleted() {
-        // do nothing
-    }
-
-    @Override
-    public final void onError(Throwable e) {
-        try {
-            mTvShowsView.showError(ApiStatusCode.getApiStatusByCode(((HttpException) e).code()));
-        } catch (Exception exc) {
-            mTvShowsView.showError(e.getMessage());
+    public void start() {
+        if (mTvShowsView.isTheListEmpty()) {
+            mTvShowsView.showProgress();
+            mGetPopularTvShowsInteractor.setPresenter(this);
+            mGetPopularTvShowsInteractor.execute();
         }
     }
 
     @Override
-    public final void onNext(TvShowsWrapper tvShowsWrapper) {
-
+    public void onPopularTvShowsResponse(List<TvShow> popularTvShowList) {
         if (mTvShowsView.isTheListEmpty()) {
             mTvShowsView.hideProgress();
-            mTvShowsView.showPopularTvShows(tvShowsWrapper.getTvShowInfo());
+            mTvShowsView.showPopularTvShows(popularTvShowList);
         } else {
-            mTvShowsView.appendPopularTvShows(tvShowsWrapper.getTvShowInfo());
+            mTvShowsView.appendPopularTvShows(popularTvShowList);
         }
         mIsLoading = false;
     }
 
     @Override
-    public void start() {
-        if (mTvShowsView.isTheListEmpty()) {
-            mTvShowsView.showProgress();
-            mGetPopularTvShows.setPresenter(this);
-            mGetPopularTvShows.execute();
-        }
+    public void onErrorResponse(String error) {
+        mTvShowsView.hideProgress();
+        mTvShowsView.showError(error);
+    }
+
+    @Override
+    public void stop() {
     }
 
     public void showMoreTvShows() {
-        mGetPopularTvShows.execute();
-        mTvShowsView.showProgress();
+        mGetPopularTvShowsInteractor.execute();
         mIsLoading = true;
     }
 
@@ -79,28 +71,5 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, Obs
         this.mIsLoading = isLoading;
     }
 
-    @Override
-    public void resume() {
 
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public void destroy() {
-
-    }
-
-    @Override
-    public void onError(String message) {
-
-    }
 }

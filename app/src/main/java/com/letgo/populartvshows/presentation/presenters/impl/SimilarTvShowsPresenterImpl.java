@@ -1,26 +1,24 @@
 package com.letgo.populartvshows.presentation.presenters.impl;
 
 import com.letgo.populartvshows.domain.interactors.SimilarTvShowsInteractor;
-import com.letgo.populartvshows.domain.model.entities.TvShowsWrapper;
+import com.letgo.populartvshows.domain.model.entities.TvShow;
 import com.letgo.populartvshows.presentation.presenters.SimilarTvShowsPresenter;
-import com.letgo.populartvshows.utils.ApiStatusCode;
+
+import java.util.List;
 
 import javax.inject.Inject;
-
-import retrofit2.adapter.rxjava.HttpException;
-import rx.Observer;
 
 /**
  * @author diego.galico
  */
-public class SimilarTvShowsPresenterImpl implements SimilarTvShowsPresenter, Observer<TvShowsWrapper> {
+public class SimilarTvShowsPresenterImpl implements SimilarTvShowsPresenter, SimilarTvShowsInteractor.SimilarTvShowsResponse {
 
     private SimilarTvShowsView mSimilarTvShowsView;
-    private SimilarTvShowsInteractor mGetSimilarTvShows;
+    private SimilarTvShowsInteractor mGetSimilarTvShowsInteractor;
 
     @Inject
-    public SimilarTvShowsPresenterImpl(SimilarTvShowsInteractor getSimilarTvShows) {
-        mGetSimilarTvShows = getSimilarTvShows;
+    public SimilarTvShowsPresenterImpl(SimilarTvShowsInteractor getSimilarTvShowsInteractor) {
+        mGetSimilarTvShowsInteractor = getSimilarTvShowsInteractor;
     }
 
     public void attachView(SimilarTvShowsView tvShowsView) {
@@ -28,54 +26,25 @@ public class SimilarTvShowsPresenterImpl implements SimilarTvShowsPresenter, Obs
     }
 
     @Override
-    public final void onCompleted() {
-        // do nothing
-    }
-
-    @Override
-    public final void onError(Throwable e) {
-        try {
-            mSimilarTvShowsView.showError(ApiStatusCode.getApiStatusByCode(((HttpException) e).code()));
-        } catch (Exception exc) {
-            mSimilarTvShowsView.showError(e.getMessage());
-        }
-    }
-
-    @Override
-    public void onNext(TvShowsWrapper tvShowsWrapper) {
-        mSimilarTvShowsView.hideProgress();
-        mSimilarTvShowsView.showSimilarTvShows(tvShowsWrapper.getTvShowInfo());
-    }
-
-    @Override
     public void start() {
         mSimilarTvShowsView.showProgress();
-        mGetSimilarTvShows.setPresenter(this);
-        mGetSimilarTvShows.execute();
+        mGetSimilarTvShowsInteractor.setPresenter(this);
+        mGetSimilarTvShowsInteractor.execute();
     }
 
     @Override
-    public void resume() {
-
+    public void onSimilarTvShowsResponse(List<TvShow> similarTvShowList) {
+        mSimilarTvShowsView.hideProgress();
+        mSimilarTvShowsView.showSimilarTvShows(similarTvShowList);
     }
 
     @Override
-    public void pause() {
-
+    public void onErrorResponse(String error) {
+        mSimilarTvShowsView.showError(error);
     }
 
     @Override
     public void stop() {
-
-    }
-
-    @Override
-    public void destroy() {
-
-    }
-
-    @Override
-    public void onError(String message) {
 
     }
 }
