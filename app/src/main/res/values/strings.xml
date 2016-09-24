@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PopularTvShows</string>
+    <string name="app_name">Popular Tv Shows</string>
     <string name="overview_label">OVERVIEW</string>
     <string name="vote_average_label">VOTE AVERAGE</string>
     <string name="first_air_date_label">FIRST AIR DATE</string>

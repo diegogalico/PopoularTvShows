@@ -7,6 +7,9 @@ import com.letgo.populartvshows.presentation.ui.fragments.SplashFragment;
 
 /**
  * @author diego.galico
+ *
+ * Activity in charge of showing splash screen
+ *
  */
 public class SplashActivity extends BaseActivity {
     @Override

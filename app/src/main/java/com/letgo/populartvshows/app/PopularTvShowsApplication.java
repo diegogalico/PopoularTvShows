@@ -16,12 +16,16 @@ import com.letgo.populartvshows.app.dependencyinjection.modules.NetworkModule;
 import com.letgo.populartvshows.app.dependencyinjection.modules.TheMovieModule;
 import com.letgo.populartvshows.utils.NetworkUtils;
 
+import java.util.Locale;
+
 import cat.ereza.customactivityoncrash.CustomActivityOnCrash;
 import timber.log.Timber;
 import timber.log.Timber.DebugTree;
 
 /**
  * @author diego.galico
+ *
+ * Application class
  */
 public class PopularTvShowsApplication extends Application {
 
@@ -33,7 +37,6 @@ public class PopularTvShowsApplication extends Application {
      * Static method for get application context
      *
      * @param context
-     *
      * @return
      */
     public static PopularTvShowsApplication get(Context context) {
@@ -43,28 +46,29 @@ public class PopularTvShowsApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        //initiate Crittercism
+        // initiate Crittercism
         Crittercism.initialize(this, Constants.CRITTERCISM_API_KEY);
         // initiate Timber
         Timber.plant(new DebugTree());
-        //install CustomActivityOnCrash
+        // install CustomActivityOnCrash
         CustomActivityOnCrash.install(this);
+        // set device language
+        Constants.DEVICE_LANGUAGE = Locale.getDefault().getLanguage();
 
         mNetworkComponent = DaggerNetworkComponent.builder()
-                                                  // list of modules that are part of this component need to be created here too
-                                                  .appModule(new AppModule(this))
-                                                  .networkModule(new NetworkModule(Constants.THE_MOVIE_ENDPOINT))
-                                                  .build();
+                .appModule(new AppModule(this))
+                .networkModule(new NetworkModule(Constants.THE_MOVIE_ENDPOINT))
+                .build();
 
         mTheMovieComponent = DaggerTheMovieComponent.builder()
-                                                    .networkComponent(mNetworkComponent)
-                                                    .theMovieModule(new TheMovieModule())
-                                                    .build();
+                .networkComponent(mNetworkComponent)
+                .theMovieModule(new TheMovieModule())
+                .build();
 
         mAppComponent = DaggerAppComponent.builder()
-                                          .appModule(new AppModule(this))
-                                          .domainModule(new DomainModule())
-                                          .build();
+                .appModule(new AppModule(this))
+                .domainModule(new DomainModule())
+                .build();
     }
 
     public TheMovieComponent getTheMovieComponent() {

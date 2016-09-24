@@ -11,6 +11,9 @@ import rx.Observer;
 
 /**
  * @author diego.galico
+ *
+ * TvShowsInteractorImpl class is in charge of calling {@link RestData} to obtain popular tv shows response
+ *
  */
 public class TvShowsInteractorImpl implements TvShowsInteractor, Observer<TvShowsWrapper> {
 

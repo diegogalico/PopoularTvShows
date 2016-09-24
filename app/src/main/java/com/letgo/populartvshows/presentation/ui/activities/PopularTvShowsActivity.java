@@ -7,6 +7,9 @@ import com.letgo.populartvshows.presentation.ui.fragments.PopularTvShowsFragment
 
 /**
  * @author diego.galico
+ *
+ * Activity in charge of showing popular tv shows
+ *
  */
 public class PopularTvShowsActivity extends BaseActivity {
 

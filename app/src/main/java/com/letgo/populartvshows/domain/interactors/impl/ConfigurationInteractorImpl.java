@@ -5,18 +5,16 @@ import com.letgo.populartvshows.domain.interactors.ConfigurationInteractor;
 import com.letgo.populartvshows.domain.model.entities.Configuration;
 import com.letgo.populartvshows.domain.model.rest.RestData;
 import com.letgo.populartvshows.presentation.presenters.impl.ConfigurationPresenterImpl;
-import com.letgo.populartvshows.presentation.presenters.impl.PopularTvShowsPresenterImpl;
-import com.letgo.populartvshows.utils.StringUtils;
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * @author diego.galico
+ *
+ * ConfigurationInteractorImpl class is in charge of calling {@link RestData} to obtain configuration response
+ *
  */
 public class ConfigurationInteractorImpl implements ConfigurationInteractor, Observer<Configuration> {
 
@@ -40,16 +38,16 @@ public class ConfigurationInteractorImpl implements ConfigurationInteractor, Obs
 
     @Override
     public void setImageUrl(Configuration configuration) {
-        String posterUrl = configuration.getImages().getBase_url();
-        String backdropUrl = configuration.getImages().getBase_url();
+        String posterUrl = configuration.getImages().getBaseUrl();
+        String backdropUrl = configuration.getImages().getBaseUrl();
         String posterImageSize = Constants.DEFAULT_IMAGE_SIZE;
         String backdropImageSize = Constants.DEFAULT_IMAGE_SIZE;
-        for (String posterSize : configuration.getImages().getPoster_sizes()) {
+        for (String posterSize : configuration.getImages().getPosterSizes()) {
              if(posterSize.equals(Constants.POSTER_IMAGE_SIZE)){
                  posterImageSize = posterSize;
              }
         }
-        for (String backdropSize : configuration.getImages().getBackdrop_sizes()) {
+        for (String backdropSize : configuration.getImages().getBackdropSizes()) {
             if(backdropSize.equals(Constants.BACKDROP_IMAGE_SIZE)){
                 backdropImageSize = backdropSize;
             }

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.letgo.populartvshows.R;
+import com.letgo.populartvshows.app.Constants;
 import com.letgo.populartvshows.app.PopularTvShowsApplication;
 import com.letgo.populartvshows.app.dependencyinjection.components.DaggerTvShowsComponent;
 import com.letgo.populartvshows.app.dependencyinjection.modules.TvShowsModule;
@@ -27,6 +28,7 @@ import com.letgo.populartvshows.presentation.ui.activities.TvShowDetailActivity;
 import com.letgo.populartvshows.presentation.ui.adapters.PopularTvShowsAdapter;
 import com.letgo.populartvshows.utils.NetworkUtils;
 import com.letgo.populartvshows.utils.RecyclerItemClickListener;
+import com.letgo.populartvshows.utils.ViewType;
 
 import java.util.List;
 
@@ -38,17 +40,20 @@ import butterknife.Optional;
 
 /**
  * @author diego.galico
+ *
+ * Fragment in charge of showing popular tv shows
+ *
  */
-public class PopularTvShowsFragment extends BaseFragment implements
-        PopularTvShowsPresenter.PopularTvShowsView {
+public class PopularTvShowsFragment extends BaseFragment implements PopularTvShowsPresenter.PopularTvShowsView {
 
     private final static String BUNDLE_TV_SHOWS_WRAPPER = "tv_shows_wrapper";
+    private static final String TV_SHOW_OBJECT = "tv_show_object";
+
+    private boolean loading = true;
+    int mPastVisibleItems, mVisibleItemCount, mTotalItemCount;
+
     private PopularTvShowsAdapter mTvShowsAdapter;
     private GridLayoutManager mLinearLayout;
-    boolean loading = true;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
-    private static final String TV_SHOW_OBJECT = "tv_show_object";
-    private static final String TV_SHOW_ID = "tv_show_id";
 
     @Inject
     PopularTvShowsPresenterImpl mTvShowsPresenter;
@@ -90,23 +95,29 @@ public class PopularTvShowsFragment extends BaseFragment implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize dependency injection
         initializeDependencyInjector();
 
         if (savedInstanceState == null) {
             mTvShowsPresenter.attachView(this);
         } else {
+            mTvShowsPresenter.attachView(this);
             initializeFromParams(savedInstanceState);
         }
     }
 
+    /**
+     * Initialize dependency injection
+     */
     private void initializeDependencyInjector() {
 
         PopularTvShowsApplication app = (PopularTvShowsApplication) getActivity().getApplication();
 
         DaggerTvShowsComponent.builder()
-                              .appComponent(app.getAppComponent())
-                              .tvShowsModule(new TvShowsModule())
-                              .build().inject(this);
+                .appComponent(app.getAppComponent())
+                .tvShowsModule(new TvShowsModule())
+                .build().inject(this);
     }
 
     @Override
@@ -118,6 +129,7 @@ public class PopularTvShowsFragment extends BaseFragment implements
     @Override
     public void onResume() {
         super.onResume();
+        // Show snack bar if no connection
         if (!NetworkUtils.hasNetwork(getContext())) {
             showSnackBar();
         }
@@ -126,18 +138,26 @@ public class PopularTvShowsFragment extends BaseFragment implements
     private void initializeFromParams(Bundle savedInstanceState) {
         TvShowsWrapper tvShowsWrapper = (TvShowsWrapper) savedInstanceState
                 .getSerializable(BUNDLE_TV_SHOWS_WRAPPER);
+
+        mTvShowsPresenter.onPopularTvShowsResponse(tvShowsWrapper.getTvShowInfo());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_popular_tv_shows, container, false);
+
+        // Inject fragment and view to ButterKnife
         ButterKnife.inject(this, view);
+
+        // Toolbar initialization
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
 
+        // Retry clicked
         mRetry.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                // Retrieve tv shows information
                 if (NetworkUtils.hasNetwork(getContext())) {
                     mLinearLayoutError.setVisibility(View.GONE);
                     if (isTheListEmpty()) {
@@ -147,38 +167,41 @@ public class PopularTvShowsFragment extends BaseFragment implements
             }
         });
 
+        mLinearLayout = new GridLayoutManager(getActivity(), Constants.GRID_LAYOUT_COLUMNS);
 
-        mLinearLayout = new GridLayoutManager(getActivity(), 2);
-
+        // Return span size depending view type item in order to show centered pagination loading
         mLinearLayout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch (mTvShowsAdapter.getItemViewType(position)) {
-                    case 0:
-                        return 1;
-                    case 1:
-                        return 2; //number of columns of the grid
-                    default:
-                        return -1;
+
+                int itemViewType = mTvShowsAdapter.getItemViewType(position);
+
+                if (itemViewType == ViewType.VIEW_TYPE_ITEM.getValue()) {
+                    return 1;
+                } else if (itemViewType == ViewType.VIEW_TYPE_LOADING.getValue()) {
+                    return Constants.GRID_LAYOUT_COLUMNS; //number of columns of the grid
+                } else {
+                    return -1;
                 }
             }
         });
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayout);
 
+        // Method called one user scrolls the recycler view
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
-                    visibleItemCount = mLinearLayout.getChildCount();
-                    totalItemCount = mLinearLayout.getItemCount();
-                    pastVisiblesItems = mLinearLayout.findFirstVisibleItemPosition();
+                    mVisibleItemCount = mLinearLayout.getChildCount();
+                    mTotalItemCount = mLinearLayout.getItemCount();
+                    mPastVisibleItems = mLinearLayout.findFirstVisibleItemPosition();
 
                     if (loading) {
-                        if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                        if ((mVisibleItemCount + mPastVisibleItems) >= mTotalItemCount) {
                             loading = false;
-                            //Do pagination
-                            mTvShowsAdapter.loadMore();
+                            // Do pagination
+                            mTvShowsAdapter.paginationLoading();
                             mTvShowsPresenter.showMoreTvShows();
                         }
                     }
@@ -186,28 +209,33 @@ public class PopularTvShowsFragment extends BaseFragment implements
             }
         });
 
+        // Method called one user clicks recycler view item
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        // do whatever
-                        Intent tvShowDetailActivityIntent = new Intent(
-                                getActivity(), TvShowDetailActivity.class);
 
-                        TvShow tvShowObject = mTvShowsAdapter.getTvShowsList().get(position);
-                        int tvShowID = mTvShowsAdapter.getTvShowsList().get(position).getId();
-                        tvShowDetailActivityIntent.putExtra(TV_SHOW_OBJECT, new Gson().toJson(tvShowObject));
-                        tvShowDetailActivityIntent.putExtra(TV_SHOW_ID, tvShowID);
-                        getActivity().startActivity(tvShowDetailActivityIntent);
+                        // if Picasso retrieved item image
+                        if (mTvShowsAdapter.isTvShowReady(position)) {
+                            Intent tvShowDetailActivityIntent = new Intent(
+                                    getActivity(), TvShowDetailActivity.class);
+
+                            // Send tvShowObject via intent
+                            TvShow tvShowObject = mTvShowsAdapter.getTvShowsList().get(position);
+                            tvShowDetailActivityIntent.putExtra(TV_SHOW_OBJECT, new Gson().toJson(tvShowObject));
+
+                            getActivity().startActivity(tvShowDetailActivityIntent);
+
+                            /// Left to right transition animation when activity started
+                            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                        }
                     }
 
                     @Override
                     public void onLongItemClick(View view, int position) {
-                        // do whatever
                     }
                 })
         );
-
 
         return view;
     }
@@ -216,8 +244,8 @@ public class PopularTvShowsFragment extends BaseFragment implements
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (mTvShowsAdapter != null) {
-            /*outState.putSerializable(BUNDLE_TV_SHOWS_WRAPPER, new TvShowsWrapper(
-                    mTvShowsAdapter.getTvShowsList()));*/
+            outState.putSerializable(BUNDLE_TV_SHOWS_WRAPPER, new TvShowsWrapper(
+                    mTvShowsAdapter.getTvShowsList()));
         }
     }
 
@@ -253,7 +281,7 @@ public class PopularTvShowsFragment extends BaseFragment implements
     @Override
     public void showError(String message) {
         if (!loading) {
-            mTvShowsAdapter.removeLoading();
+            mTvShowsAdapter.removePaginationLoading();
             loading = true;
         } else {
             mErrorSubtitle.setText(message);
@@ -262,6 +290,9 @@ public class PopularTvShowsFragment extends BaseFragment implements
         hideProgress();
     }
 
+    /**
+     * Show snack bar
+     */
     private void showSnackBar() {
         Snackbar snack = Snackbar.make(mRecyclerView, getResources().getString(R.string.snack_bar_message), Snackbar.LENGTH_LONG);
         View view = snack.getView();

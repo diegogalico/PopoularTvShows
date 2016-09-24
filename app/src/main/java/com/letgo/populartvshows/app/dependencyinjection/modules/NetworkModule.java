@@ -133,12 +133,8 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    OkHttpClient provideOkHttpClient(HttpLoggingInterceptor httpLoggingInterceptor, Interceptor offlineCacheInterceptor,
-            Interceptor cacheInterceptor, Cache cache) {
+    OkHttpClient provideOkHttpClient(Cache cache) {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                /*.addInterceptor(httpLoggingInterceptor)
-                .addInterceptor(offlineCacheInterceptor)
-                .addNetworkInterceptor(cacheInterceptor)*/
                 .cache(cache)
                 .build();
         return okHttpClient;

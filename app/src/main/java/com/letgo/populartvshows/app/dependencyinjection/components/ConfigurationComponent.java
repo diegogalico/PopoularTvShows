@@ -12,6 +12,5 @@ import dagger.Component;
 @PerActivity
 @Component(dependencies = AppComponent.class, modules = ConfigurationModule.class)
 public interface ConfigurationComponent {
-
     void inject (SplashFragment splashFragment);
 }

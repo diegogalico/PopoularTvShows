@@ -4,6 +4,7 @@ package com.letgo.populartvshows.presentation.presenters.base;
  * @author diego.galico
  */
 public interface BasePresenter {
+
     /**
      * Called when the presenter is initialized
      */

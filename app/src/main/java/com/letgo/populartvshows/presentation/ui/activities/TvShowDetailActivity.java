@@ -27,13 +27,14 @@ import butterknife.Optional;
 
 /**
  * @author diego.galico
+ *
+ * Activity in charge of handling similar tv shows pager
+ *
  */
 public class TvShowDetailActivity extends SecondLevelActivity implements SimilarTvShowsPresenter.SimilarTvShowsView, ViewPager.OnPageChangeListener {
 
     private static final String TV_SHOW_OBJECT = "tv_show_object";
-    private static final String TV_SHOW_ID = "tv_show_id";
     private TvShow mTvShow;
-    private int mTvShowId;
     private List<TvShow> mSimilarTvShowList = new ArrayList<>();
 
     private SimilarTvShowsAdapter mAdapter;
@@ -53,37 +54,59 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
+
+        // Get TvShow from extra bundle
         String jsonMyObject = StringUtils.EMPTY_STRING;
         if (extras != null) {
-            mTvShowId = extras.getInt(TV_SHOW_ID, 0);
             jsonMyObject = extras.getString(TV_SHOW_OBJECT);
         }
+
+        // Convert json object to TvShow object
         mTvShow = new Gson().fromJson(jsonMyObject, TvShow.class);
+
         mSimilarTvShowList.add(mTvShow);
+
+        // Initialize dependency injection
         initializeDependencyInjector();
+
+        // Inject activity to ButterKnife
         ButterKnife.inject(this);
 
         if (savedInstanceState == null) {
             mSimilarTvShowsPresenter.attachView(this);
         } else {
-            //initializeFromParams(savedInstanceState);
+            initializeFromParams(savedInstanceState);
+
         }
 
+        // Toolbar initialization
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+
+        //Toolbar back button click
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //What to do on back clicked
                 onBackPressed();
             }
         });
+
         setTitle(mTvShow.getName());
         mAdapter = new SimilarTvShowsAdapter(getSupportFragmentManager(), mTvShow);
+
+        // Set adapter with selected tv show
         mPager.setAdapter(mAdapter);
         mPager.setOnPageChangeListener(this);
+    }
 
+    /**
+     * Right to left transition animation when back pressed
+     */
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
     @Override
@@ -92,16 +115,27 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
         mSimilarTvShowsPresenter.start();
     }
 
+    /**
+     * Initialize dependency injection
+     */
     private void initializeDependencyInjector() {
 
         PopularTvShowsApplication app = (PopularTvShowsApplication) getApplication();
 
         DaggerSimilarTvShowsComponent.builder()
-                                     .appComponent(app.getAppComponent())
-                                     .similarTvShowsModule(new SimilarTvShowsModule(mTvShowId))
-                                     .build().inject(this);
+                .appComponent(app.getAppComponent())
+                .similarTvShowsModule(new SimilarTvShowsModule(mTvShow.getId()))
+                .build().inject(this);
     }
 
+    private void initializeFromParams(Bundle savedInstanceState) {
+
+    }
+
+    /**
+     * Set similar tv shows to adapter
+     * @param similarTvShowList
+     */
     @Override
     public void showSimilarTvShows(List<TvShow> similarTvShowList) {
         mSimilarTvShowList.addAll(similarTvShowList);
@@ -134,6 +168,10 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
 
     }
 
+    /**
+     * Set toolbar title depending pager position
+     * @param position
+     */
     @Override
     public void onPageSelected(int position) {
         setTitle(mSimilarTvShowList.get(position).getName());

@@ -8,8 +8,10 @@ import javax.inject.Inject;
 
 /**
  * @author diego.galico
+ *
+ * ConfigurationPresenterImpl class is in charge of calling {@link ConfigurationInteractor} to obtain configuration response
+ *
  */
-
 public class ConfigurationPresenterImpl implements ConfigurationPresenter, ConfigurationInteractor.ConfigurationResponse {
 
     private ConfigurationInteractor mGetConfigurationInteractor;
@@ -20,6 +22,10 @@ public class ConfigurationPresenterImpl implements ConfigurationPresenter, Confi
         mGetConfigurationInteractor = getConfigurationInteractor;
     }
 
+    /**
+     * Attach view to presenter
+     * @param configurationView
+     */
     public void attachView(ConfigurationView configurationView) {
         mConfigurationView = configurationView;
     }
@@ -31,13 +37,21 @@ public class ConfigurationPresenterImpl implements ConfigurationPresenter, Confi
         mGetConfigurationInteractor.execute();
     }
 
+    /**
+     * Configuration response
+     * @param configuration
+     */
     @Override
     public void onConfigurationResponse(Configuration configuration) {
         mGetConfigurationInteractor.setImageUrl(configuration);
         mConfigurationView.hideProgress();
-        mConfigurationView.startPopularTvShowsFragment();
+        mConfigurationView.startPopularTvShowsActivity();
     }
 
+    /**
+     * Error response
+     * @param error
+     */
     @Override
     public void onErrorResponse(String error) {
         mConfigurationView.hideProgress();

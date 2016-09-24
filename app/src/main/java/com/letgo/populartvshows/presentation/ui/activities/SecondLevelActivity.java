@@ -4,6 +4,9 @@ import com.letgo.populartvshows.R;
 
 /**
  * @author diego.galico
+ *
+ * Base Second Level activity
+ *
  */
 public class SecondLevelActivity extends BaseActivity {
 

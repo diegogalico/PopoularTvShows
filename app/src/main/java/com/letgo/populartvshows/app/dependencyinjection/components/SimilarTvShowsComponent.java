@@ -12,6 +12,5 @@ import dagger.Component;
 @PerActivity
 @Component(dependencies = AppComponent.class, modules = SimilarTvShowsModule.class)
 public interface SimilarTvShowsComponent {
-
     void inject(TvShowDetailActivity tvShowDetailActivity);
 }

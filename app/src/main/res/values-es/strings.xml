@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Series de Tv Populares</string>
+    <string name="overview_label">DESCRIPCION</string>
+    <string name="vote_average_label">PROMEDIO DE VOTO</string>
+    <string name="first_air_date_label">PRIMER DIA AL AIRE</string>
+    <string name="default_error_title">Error!</string>
+    <string name="default_error_subtitle">Por favor verifique conexion</string>
+    <string name="error_retry">Reintentar</string>
+    <string name="snack_bar_message">Sin conexion a internet</string>
+</resources>

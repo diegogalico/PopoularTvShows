@@ -3,18 +3,17 @@ package com.letgo.populartvshows.domain.interactors.impl;
 import com.letgo.populartvshows.domain.interactors.SimilarTvShowsInteractor;
 import com.letgo.populartvshows.domain.model.entities.TvShowsWrapper;
 import com.letgo.populartvshows.domain.model.rest.RestData;
-import com.letgo.populartvshows.presentation.presenters.impl.PopularTvShowsPresenterImpl;
 import com.letgo.populartvshows.presentation.presenters.impl.SimilarTvShowsPresenterImpl;
 
 import javax.inject.Inject;
 
-import rx.Observable;
 import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * @author diego.galico
+ *
+ * SimilarTvShowsInteractorImpl class is in charge of calling {@link RestData} to obtain similar tv shows response
+ *
  */
 public class SimilarTvShowsInteractorImpl implements SimilarTvShowsInteractor, Observer<TvShowsWrapper> {
 

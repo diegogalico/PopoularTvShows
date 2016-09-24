@@ -7,6 +7,9 @@ import android.view.View;
 
 /**
  * @author diego.galico
+ *
+ * Base fragment
+ *
  */
 public class BaseFragment extends Fragment {
 

@@ -1,67 +1,29 @@
 package com.letgo.populartvshows.domain.model.entities;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author diego.galico
+ *
+ * Class that model TvShow information
+ *
  */
-public class TvShow {
+public class TvShow implements Serializable{
 
-    @SerializedName("poster_path")
-    @Expose
     String poster_path;
-
-    @SerializedName("popularity")
-    @Expose
     double popularity;
-
-    @SerializedName("id")
-    @Expose
     int id;
-
-    @SerializedName("backdrop_path")
-    @Expose
     String backdrop_path;
-
-    @SerializedName("vote_average")
-    @Expose
     double vote_average;
-
-    @SerializedName("overview")
-    @Expose
     String overview;
-
-    @SerializedName("first_air_date")
-    @Expose
     String first_air_date;
-
-    @SerializedName("origin_country")
-    @Expose
     List<String> origin_country;
-
-    @SerializedName("genre_ids")
-    @Expose
     List<Integer> genre_ids;
-
-    @SerializedName("original_language")
-    @Expose
     String original_language;
-
-    @SerializedName("vote_count")
-    @Expose
     int vote_count;
-
-    @SerializedName("name")
-    @Expose
     String name;
-
-    @SerializedName("original_name")
-    @Expose
     String original_name;
-
     boolean tvShowReady;
 
     public String getPosterPath() {

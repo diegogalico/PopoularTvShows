@@ -4,6 +4,8 @@ import com.letgo.populartvshows.utils.StringUtils;
 
 /**
  * @author diego.galico
+ *
+ * Application constants
  */
 public class Constants {
     public static final String CRITTERCISM_API_KEY = "72d68d0e0f494f5e9f20e07ced05017500555300";
@@ -13,10 +15,13 @@ public class Constants {
     public static final String API_KEY = "90d95adef3feab2f5beb67d245110c28";
     public static final String THE_MOVIE_ENDPOINT = "http://api.themoviedb.org/";
 
+    public static String DEVICE_LANGUAGE = "en";
     public static String IMAGE_URL_POSTER = StringUtils.EMPTY_STRING;
     public static String IMAGE_URL_BACKDROP = StringUtils.EMPTY_STRING;
     public static final String POSTER_IMAGE_SIZE = "w185";
     public static final String BACKDROP_IMAGE_SIZE = "w780";
     public static final String DEFAULT_IMAGE_SIZE = "original";
+
+    public static final int GRID_LAYOUT_COLUMNS = 2;
 
 }

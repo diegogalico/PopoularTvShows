@@ -10,6 +10,9 @@ import javax.inject.Inject;
 
 /**
  * @author diego.galico
+ *
+ * SimilarTvShowsPresenterImpl class is in charge of calling {@link SimilarTvShowsInteractor} to obtain similar tv shows response
+ *
  */
 public class SimilarTvShowsPresenterImpl implements SimilarTvShowsPresenter, SimilarTvShowsInteractor.SimilarTvShowsResponse {
 
@@ -21,6 +24,10 @@ public class SimilarTvShowsPresenterImpl implements SimilarTvShowsPresenter, Sim
         mGetSimilarTvShowsInteractor = getSimilarTvShowsInteractor;
     }
 
+    /**
+     * Attach view to presenter
+     * @param tvShowsView
+     */
     public void attachView(SimilarTvShowsView tvShowsView) {
         mSimilarTvShowsView = tvShowsView;
     }
@@ -32,12 +39,20 @@ public class SimilarTvShowsPresenterImpl implements SimilarTvShowsPresenter, Sim
         mGetSimilarTvShowsInteractor.execute();
     }
 
+    /**
+     * Similar tv shows response
+     * @param similarTvShowList
+     */
     @Override
     public void onSimilarTvShowsResponse(List<TvShow> similarTvShowList) {
         mSimilarTvShowsView.hideProgress();
         mSimilarTvShowsView.showSimilarTvShows(similarTvShowList);
     }
 
+    /**
+     * Error response
+     * @param error
+     */
     @Override
     public void onErrorResponse(String error) {
         mSimilarTvShowsView.showError(error);

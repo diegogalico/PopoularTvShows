@@ -11,4 +11,5 @@
     <color name="grey">#cccccc</color>
     <color name="label">#283593</color>
     <color name="black">#000000</color>
+    <color name="background">#2E3136</color>
 </resources>

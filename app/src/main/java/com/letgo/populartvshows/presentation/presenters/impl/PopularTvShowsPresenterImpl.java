@@ -10,6 +10,9 @@ import javax.inject.Inject;
 
 /**
  * @author diego.galico
+ *
+ * PopularTvShowsPresenterImpl class is in charge of calling {@link TvShowsInteractor} to obtain tv shows response
+ *
  */
 public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, TvShowsInteractor.PopularTvShowsResponse {
 
@@ -22,6 +25,10 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, TvS
         mGetPopularTvShowsInteractor = getPopularTvShowsInteractor;
     }
 
+    /**
+     * Attach view to presenter
+     * @param tvShowsView
+     */
     public void attachView(PopularTvShowsView tvShowsView) {
         mTvShowsView = tvShowsView;
     }
@@ -35,6 +42,10 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, TvS
         }
     }
 
+    /**
+     * Popular tv shows response
+     * @param popularTvShowList
+     */
     @Override
     public void onPopularTvShowsResponse(List<TvShow> popularTvShowList) {
         if (mTvShowsView.isTheListEmpty()) {
@@ -46,6 +57,10 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, TvS
         mIsLoading = false;
     }
 
+    /**
+     * Error response
+     * @param error
+     */
     @Override
     public void onErrorResponse(String error) {
         mTvShowsView.hideProgress();

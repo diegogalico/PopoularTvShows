@@ -13,6 +13,7 @@ import com.letgo.populartvshows.R;
 import com.letgo.populartvshows.app.Constants;
 import com.letgo.populartvshows.domain.model.entities.TvShow;
 import com.letgo.populartvshows.utils.StringUtils;
+import com.letgo.populartvshows.utils.ViewType;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -20,14 +21,14 @@ import java.util.List;
 
 /**
  * @author diego.galico
+ *
+ * PopularTvShowsAdapter is an adapter class in charge of showing popular tv shows items
+ *
  */
 public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
     private List<TvShow> mTvShows;
-
-    public final int VIEW_TYPE_ITEM = 0;
-    public final int VIEW_TYPE_LOADING = 1;
 
     public PopularTvShowsAdapter(List<TvShow> tvShows) {
         mTvShows = tvShows;
@@ -39,14 +40,14 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        if (viewType == VIEW_TYPE_ITEM) {
+        if (viewType == ViewType.VIEW_TYPE_ITEM.getValue()) {
             this.mContext = viewGroup.getContext();
             View view = LayoutInflater.from(viewGroup.getContext())
-                                      .inflate(R.layout.item_popular_tv_show, viewGroup, false);
+                    .inflate(R.layout.item_popular_tv_show, viewGroup, false);
             return new TvShowViewHolder(view);
-        } else if (viewType == VIEW_TYPE_LOADING) {
+        } else if (viewType == ViewType.VIEW_TYPE_LOADING.getValue()) {
             View view = LayoutInflater.from(viewGroup.getContext())
-                                      .inflate(R.layout.item_loading, viewGroup, false);
+                    .inflate(R.layout.item_loading, viewGroup, false);
             return new LoadingViewHolder(view);
         }
         return null;
@@ -54,7 +55,7 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     @Override
     public int getItemViewType(int position) {
-        return mTvShows.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_ITEM;
+        return mTvShows.get(position) == null ? ViewType.VIEW_TYPE_LOADING.getValue() : ViewType.VIEW_TYPE_ITEM.getValue();
     }
 
     @Override
@@ -64,50 +65,63 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             TvShowViewHolder tvShowViewHolder = (TvShowViewHolder) holder;
             tvShowViewHolder.title.setText(tvShow.getName());
             tvShowViewHolder.average.setText(StringUtils.EMPTY_STRING + tvShow.getVoteAverage());
+
+            // Concat image url poster with tv show image url
             String imageUrl = Constants.IMAGE_URL_POSTER + tvShow.getPosterPath();
+
+            // Load image using Picasso
             Picasso.with(mContext)
-                   .load(imageUrl)
-                   .fit().centerCrop()
-                   .into(tvShowViewHolder.itemTvShowCover, new Callback() {
-                       @Override
-                       public void onSuccess() {
-                           mTvShows.get(position).setTvShowReady(true);
-                       }
+                    .load(imageUrl)
+                    .fit().centerCrop()
+                    .into(tvShowViewHolder.itemTvShowCover, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            // Tv show is ready to be clicked
+                            mTvShows.get(position).setTvShowReady(true);
+                        }
+                        @Override
+                        public void onError() {
 
-                       @Override
-                       public void onError() {
-
-                       }
-                   });
+                        }
+                    });
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);
         }
     }
 
+    /**
+     * Is tv show ready to be clicked
+     * @param position
+     * @return
+     */
     public boolean isTvShowReady(int position) {
-
         return mTvShows.get(position).isTvShowReady();
     }
 
-    public void loadMore() {
+    /**
+     * Add pagination loading for tv shows
+     */
+    public void paginationLoading() {
         mTvShows.add(null);
         notifyItemInserted(mTvShows.size() - 1);
     }
 
+    /**
+     * Append tv shows to actual list
+     * @param tvShowList
+     */
     public void appendTvShows(List<TvShow> tvShowList) {
-        //Remove loading item
-        removeLoading();
+        //Remove pagination loading item
+        removePaginationLoading();
         mTvShows.addAll(tvShowList);
         notifyDataSetChanged();
     }
 
-    public void append(List<TvShow> tvShowList) {
-        mTvShows.addAll(tvShowList);
-        notifyDataSetChanged();
-    }
-
-    public void removeLoading(){
+    /**
+     * Remove pagination loading for tv shows
+     */
+    public void removePaginationLoading() {
         mTvShows.remove(mTvShows.size() - 1);
         notifyItemRemoved(mTvShows.size());
     }
@@ -117,7 +131,7 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return mTvShows.size();
     }
 
-    class TvShowViewHolder extends RecyclerView.ViewHolder{
+    class TvShowViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView itemTvShowCover;
         public TextView title;

@@ -26,6 +26,9 @@ import butterknife.Optional;
 
 /**
  * @author diego.galico
+ *
+ * Fragment in charge of showing splash screen
+ *
  */
 public class SplashFragment extends BaseFragment implements ConfigurationPresenter.ConfigurationView {
 
@@ -39,6 +42,10 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     @Optional
     @InjectView(R.id.layout_error_splash)
     LinearLayout mLinearLayoutError;
+
+    @Optional
+    @InjectView(R.id.splash_title)
+    TextView mSplashTitle;
 
     @Optional
     @InjectView(R.id.error_subtitle)
@@ -56,7 +63,10 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize dependency injection
         initializeDependencyInjector();
+
         mConfigurationPresenter.attachView(this);
     }
 
@@ -64,8 +74,11 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_splash, container, false);
         ButterKnife.inject(this, view);
+
+        // Retry clicked
         mRetry.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                // Retrieve configuration information
                 if (NetworkUtils.hasNetwork(getContext())) {
                     mConfigurationPresenter.start();
                     mLinearLayoutError.setVisibility(View.GONE);
@@ -81,6 +94,9 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
         mConfigurationPresenter.start();
     }
 
+    /**
+     * Initialize dependency injection
+     */
     private void initializeDependencyInjector() {
 
         PopularTvShowsApplication app = (PopularTvShowsApplication) getActivity().getApplication();
@@ -90,6 +106,7 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
                                     .configurationModule(new ConfigurationModule())
                                     .build().inject(this);
     }
+
 
     @Override
     public void showProgress() {
@@ -104,12 +121,14 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     @Override
     public void showError(String message) {
         mErrorSubtitle.setText(message);
+        mSplashTitle.setVisibility(View.GONE);
         mLinearLayoutError.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void startPopularTvShowsFragment() {
+    public void startPopularTvShowsActivity() {
         Intent myIntent = new Intent(getActivity(), PopularTvShowsActivity.class);
         startActivity(myIntent);
+        getActivity().finish();
     }
 }

@@ -8,11 +8,12 @@ import java.util.List;
 
 /**
  * @author diego.galico
+ *
+ * Class that model TvShowsWrapper information
+ *
  */
 public class TvShowsWrapper implements Serializable {
 
-    @SerializedName("page")
-    @Expose
     private String page;
 
     @SerializedName("results")

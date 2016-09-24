@@ -5,6 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 
 /**
  * @author diego.galico
+ *
+ * Base abstract activity
+ *
  */
 public abstract class BaseActivity extends AppCompatActivity {
 

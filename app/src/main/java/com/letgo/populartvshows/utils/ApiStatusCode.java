@@ -6,8 +6,10 @@ import java.util.Map;
 
 /**
  * @author diego.galico
+ *
+ * Class that maps status code with status message
+ *
  */
-
 public class ApiStatusCode {
 
     private static final Map<Integer, String> hashMapApiStatusCode;
