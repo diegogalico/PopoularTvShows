@@ -32,6 +32,11 @@ public class TvShowsInteractorImpl implements TvShowsInteractor, Observer<TvShow
     }
 
     @Override
+    public void setPage(int page) {
+        mCurrentPage = 1;
+    }
+
+    @Override
     public void setPresenter(PopularTvShowsPresenterImpl presenter) {
         mPopularTvShowsPresenter = presenter;
     }

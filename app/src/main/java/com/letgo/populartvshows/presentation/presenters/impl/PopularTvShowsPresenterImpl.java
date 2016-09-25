@@ -19,6 +19,8 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, TvS
     private PopularTvShowsView mTvShowsView;
     private boolean mIsLoading = false;
     private TvShowsInteractor mGetPopularTvShowsInteractor;
+    private boolean updateTvShowsList = false;
+    private static final int PAGE_NUMBER = 1;
 
     @Inject
     public PopularTvShowsPresenterImpl(TvShowsInteractor getPopularTvShowsInteractor) {
@@ -35,11 +37,20 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, TvS
 
     @Override
     public void start() {
+        updateTvShowsList = false;
+
         if (mTvShowsView.isTheListEmpty()) {
             mTvShowsView.showProgress();
             mGetPopularTvShowsInteractor.setPresenter(this);
             mGetPopularTvShowsInteractor.execute();
         }
+    }
+
+    public void updateTvShowsList(){
+        updateTvShowsList = true;
+        mGetPopularTvShowsInteractor.setPage(PAGE_NUMBER);
+        mGetPopularTvShowsInteractor.setPresenter(this);
+        mGetPopularTvShowsInteractor.execute();
     }
 
     /**
@@ -48,11 +59,15 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, TvS
      */
     @Override
     public void onPopularTvShowsResponse(List<TvShow> popularTvShowList) {
-        if (mTvShowsView.isTheListEmpty()) {
-            mTvShowsView.hideProgress();
+        if(updateTvShowsList){
             mTvShowsView.showPopularTvShows(popularTvShowList);
-        } else {
-            mTvShowsView.appendPopularTvShows(popularTvShowList);
+        }else{
+            if (mTvShowsView.isTheListEmpty()) {
+                mTvShowsView.hideProgress();
+                mTvShowsView.showPopularTvShows(popularTvShowList);
+            } else {
+                mTvShowsView.appendPopularTvShows(popularTvShowList);
+            }
         }
         mIsLoading = false;
     }
@@ -72,6 +87,7 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, TvS
     }
 
     public void showMoreTvShows() {
+        updateTvShowsList = false;
         mGetPopularTvShowsInteractor.execute();
         mIsLoading = true;
     }

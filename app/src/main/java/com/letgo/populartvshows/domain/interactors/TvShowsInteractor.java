@@ -28,6 +28,12 @@ public interface TvShowsInteractor extends Interactor {
     void setPresenter(PopularTvShowsPresenterImpl presenter);
 
     /**
+     * Set page variable in order to return first tv show pagination to {@link PopularTvShowsPresenterImpl} class
+     * @param page
+     */
+    void setPage(int page);
+
+    /**
      * Interface implemented by {@link PopularTvShowsPresenterImpl} class
      */
     interface PopularTvShowsResponse {

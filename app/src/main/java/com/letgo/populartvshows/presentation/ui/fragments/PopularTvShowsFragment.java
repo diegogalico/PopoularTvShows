@@ -2,7 +2,9 @@ package com.letgo.populartvshows.presentation.ui.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,9 +23,11 @@ import com.letgo.populartvshows.app.PopularTvShowsApplication;
 import com.letgo.populartvshows.app.dependencyinjection.components.DaggerTvShowsComponent;
 import com.letgo.populartvshows.app.dependencyinjection.modules.TvShowsModule;
 import com.letgo.populartvshows.domain.model.entities.TvShow;
-import com.letgo.populartvshows.domain.model.entities.TvShowsWrapper;
 import com.letgo.populartvshows.presentation.presenters.PopularTvShowsPresenter;
+import com.letgo.populartvshows.presentation.presenters.base.PresenterCache;
+import com.letgo.populartvshows.presentation.presenters.base.PresenterFactory;
 import com.letgo.populartvshows.presentation.presenters.impl.PopularTvShowsPresenterImpl;
+import com.letgo.populartvshows.presentation.ui.activities.PopularTvShowsActivity;
 import com.letgo.populartvshows.presentation.ui.activities.TvShowDetailActivity;
 import com.letgo.populartvshows.presentation.ui.adapters.PopularTvShowsAdapter;
 import com.letgo.populartvshows.utils.NetworkUtils;
@@ -46,7 +50,6 @@ import butterknife.Optional;
  */
 public class PopularTvShowsFragment extends BaseFragment implements PopularTvShowsPresenter.PopularTvShowsView {
 
-    private final static String BUNDLE_TV_SHOWS_WRAPPER = "tv_shows_wrapper";
     private static final String TV_SHOW_OBJECT = "tv_show_object";
 
     private boolean loading = true;
@@ -54,6 +57,11 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
 
     private PopularTvShowsAdapter mTvShowsAdapter;
     private GridLayoutManager mLinearLayout;
+
+    private static final String TAG = PopularTvShowsActivity.class.getName();
+
+    private PresenterCache presenterCache =
+            PresenterCache.getInstance();
 
     @Inject
     PopularTvShowsPresenterImpl mTvShowsPresenter;
@@ -65,6 +73,10 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
     @Optional
     @InjectView(R.id.progress_bar)
     View mProgressBar;
+
+    @Optional
+    @InjectView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Optional
     @InjectView(R.id.recycler_view_popular_tv_shows)
@@ -82,6 +94,15 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
     @InjectView(R.id.retry)
     Button mRetry;
 
+    // Retaining presenter during configuration changes
+    private PresenterFactory<PopularTvShowsPresenterImpl> presenterFactory =
+            new PresenterFactory<PopularTvShowsPresenterImpl>() {
+                @NonNull
+                @Override
+                public PopularTvShowsPresenterImpl createPresenter() {
+                    return mTvShowsPresenter;
+                }
+            };
 
     public static PopularTvShowsFragment newInstance() {
         PopularTvShowsFragment popularTvShowsFragment = new PopularTvShowsFragment();
@@ -99,12 +120,10 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
         // Initialize dependency injection
         initializeDependencyInjector();
 
-        if (savedInstanceState == null) {
-            mTvShowsPresenter.attachView(this);
-        } else {
-            mTvShowsPresenter.attachView(this);
-            initializeFromParams(savedInstanceState);
-        }
+        mTvShowsPresenter = presenterCache.getPresenter(TAG,
+                presenterFactory);
+
+        mTvShowsPresenter.attachView(this);
     }
 
     /**
@@ -115,9 +134,9 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
         PopularTvShowsApplication app = (PopularTvShowsApplication) getActivity().getApplication();
 
         DaggerTvShowsComponent.builder()
-                .appComponent(app.getAppComponent())
-                .tvShowsModule(new TvShowsModule())
-                .build().inject(this);
+                              .appComponent(app.getAppComponent())
+                              .tvShowsModule(new TvShowsModule())
+                              .build().inject(this);
     }
 
     @Override
@@ -135,16 +154,9 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
         }
     }
 
-    private void initializeFromParams(Bundle savedInstanceState) {
-        TvShowsWrapper tvShowsWrapper = (TvShowsWrapper) savedInstanceState
-                .getSerializable(BUNDLE_TV_SHOWS_WRAPPER);
-
-        mTvShowsPresenter.onPopularTvShowsResponse(tvShowsWrapper.getTvShowInfo());
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_popular_tv_shows, container, false);
 
         // Inject fragment and view to ButterKnife
@@ -188,7 +200,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(mLinearLayout);
 
-        // Method called one user scrolls the recycler view
+        // Method called when user scrolls the recycler view
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -209,7 +221,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
             }
         });
 
-        // Method called one user clicks recycler view item
+        // Method called when user clicks recycler view item
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getContext(), mRecyclerView, new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
@@ -237,20 +249,35 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
                 })
         );
 
+        // Method called when user pull to refresh
+        mSwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        // Update tv show list
+                        updateTvShowsList();
+                    }
+                }
+        );
+
         return view;
+    }
+
+    /**
+     * Update tv show list
+     */
+    private void updateTvShowsList() {
+        mTvShowsPresenter.updateTvShowsList();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (mTvShowsAdapter != null) {
-            outState.putSerializable(BUNDLE_TV_SHOWS_WRAPPER, new TvShowsWrapper(
-                    mTvShowsAdapter.getTvShowsList()));
-        }
     }
 
     @Override
     public void showPopularTvShows(List<TvShow> tvShowList) {
+        mSwipeRefreshLayout.setRefreshing(false);
         mTvShowsAdapter = new PopularTvShowsAdapter(tvShowList);
         mRecyclerView.setAdapter(mTvShowsAdapter);
         mLinearLayoutError.setVisibility(View.GONE);
@@ -287,7 +314,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
             mErrorSubtitle.setText(message);
             mLinearLayoutError.setVisibility(View.VISIBLE);
         }
-        hideProgress();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     /**
