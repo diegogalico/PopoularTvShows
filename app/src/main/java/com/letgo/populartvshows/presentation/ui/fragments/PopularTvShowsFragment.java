@@ -3,6 +3,7 @@ package com.letgo.populartvshows.presentation.ui.fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -51,7 +52,9 @@ import butterknife.Optional;
  */
 public class PopularTvShowsFragment extends BaseFragment implements PopularTvShowsPresenter.PopularTvShowsView {
 
-    private static final String TV_SHOW_OBJECT = "tv_show_object";
+    public interface OnTvShowListener {
+        void onTvShowClicked(TvShow tvShow);
+    }
 
     private boolean loading = true;
     int mPastVisibleItems, mVisibleItemCount, mTotalItemCount;
@@ -63,6 +66,8 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
 
     private PresenterCache presenterCache =
             PresenterCache.getInstance();
+
+    private OnTvShowListener onTvShowListener;
 
     @Inject
     PopularTvShowsPresenterImpl mTvShowsPresenter;
@@ -138,6 +143,16 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
                               .appComponent(app.getAppComponent())
                               .tvShowsModule(new TvShowsModule())
                               .build().inject(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        try {
+            onTvShowListener = (OnTvShowListener) getActivity();
+        } catch (ClassCastException e) {
+            throw new ClassCastException(getActivity().toString() + " must implement OnTvShowListener");
+        }
     }
 
     @Override
@@ -230,17 +245,8 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
 
                         // if Picasso retrieved item image
                         if (mTvShowsAdapter.isTvShowReady(position)) {
-                            Intent tvShowDetailActivityIntent = new Intent(
-                                    getActivity(), TvShowDetailActivity.class);
-
-                            // Send tvShowObject via intent
                             TvShow tvShowObject = mTvShowsAdapter.getTvShowsList().get(position);
-                            tvShowDetailActivityIntent.putExtra(TV_SHOW_OBJECT, new Gson().toJson(tvShowObject));
-
-                            getActivity().startActivityForResult(tvShowDetailActivityIntent, 1);
-
-                            // Left to right transition animation when activity started
-                            getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
+                            onTvShowListener.onTvShowClicked(tvShowObject);
                         }
                     }
 
