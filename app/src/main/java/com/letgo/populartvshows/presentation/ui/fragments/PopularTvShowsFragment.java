@@ -1,6 +1,5 @@
 package com.letgo.populartvshows.presentation.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.letgo.populartvshows.R;
 import com.letgo.populartvshows.app.Constants;
 import com.letgo.populartvshows.app.PopularTvShowsApplication;
@@ -29,7 +27,6 @@ import com.letgo.populartvshows.presentation.presenters.base.PresenterCache;
 import com.letgo.populartvshows.presentation.presenters.base.PresenterFactory;
 import com.letgo.populartvshows.presentation.presenters.impl.PopularTvShowsPresenterImpl;
 import com.letgo.populartvshows.presentation.ui.activities.PopularTvShowsActivity;
-import com.letgo.populartvshows.presentation.ui.activities.TvShowDetailActivity;
 import com.letgo.populartvshows.presentation.ui.adapters.PopularTvShowsAdapter;
 import com.letgo.populartvshows.utils.NetworkUtils;
 import com.letgo.populartvshows.utils.RecyclerItemClickListener;
@@ -56,7 +53,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
         void onTvShowClicked(TvShow tvShow);
     }
 
-    private boolean loading = true;
+    private boolean mLoading = true;
     int mPastVisibleItems, mVisibleItemCount, mTotalItemCount;
 
     private PopularTvShowsAdapter mTvShowsAdapter;
@@ -93,11 +90,11 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
     LinearLayout mLinearLayoutError;
 
     @Optional
-    @InjectView(R.id.error_subtitle)
+    @InjectView(R.id.text_view_error_subtitle)
     TextView mErrorSubtitle;
 
     @Optional
-    @InjectView(R.id.retry)
+    @InjectView(R.id.button_retry)
     Button mRetry;
 
     // Retaining presenter during configuration changes
@@ -129,7 +126,9 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
         mTvShowsPresenter = presenterCache.getPresenter(TAG,
                 presenterFactory);
 
-        mTvShowsPresenter.attachView(this);
+        if (savedInstanceState == null) {
+            mTvShowsPresenter.attachView(this);
+        }
     }
 
     /**
@@ -225,9 +224,9 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
                     mTotalItemCount = mLinearLayout.getItemCount();
                     mPastVisibleItems = mLinearLayout.findFirstVisibleItemPosition();
 
-                    if (loading) {
+                    if (mLoading) {
                         if ((mVisibleItemCount + mPastVisibleItems) >= mTotalItemCount) {
-                            loading = false;
+                            mLoading = false;
                             // Do pagination
                             mTvShowsAdapter.paginationLoading();
                             mTvShowsPresenter.showMoreTvShows();
@@ -297,7 +296,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
 
     @Override
     public void appendPopularTvShows(List<TvShow> tvShowList) {
-        loading = true;
+        mLoading = true;
         mTvShowsAdapter.appendTvShows(tvShowList);
         mLinearLayoutError.setVisibility(View.GONE);
     }
@@ -314,9 +313,9 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
 
     @Override
     public void showError(String message) {
-        if (!loading) {
+        if (!mLoading) {
             mTvShowsAdapter.removePaginationLoading();
-            loading = true;
+            mLoading = true;
         } else {
             mErrorSubtitle.setText(message);
             mLinearLayoutError.setVisibility(View.VISIBLE);

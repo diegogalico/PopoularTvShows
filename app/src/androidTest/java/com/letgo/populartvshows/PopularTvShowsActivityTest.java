@@ -47,7 +47,7 @@ public class PopularTvShowsActivityTest {
         onView(withId(R.id.recycler_view_popular_tv_shows)).perform(
                 RecyclerViewActions.actionOnItemAtPosition(2, ViewActions.click()));
 
-        onView(withId(R.id.activity_detail_scroll))
+        onView(withId(R.id.scroll_view_detail))
                 .check(matches(isDisplayed()));
     }
 

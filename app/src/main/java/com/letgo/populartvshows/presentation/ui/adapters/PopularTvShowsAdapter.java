@@ -157,9 +157,9 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         public TvShowViewHolder(View itemView) {
             super(itemView);
-            itemTvShowCover = (ImageView) itemView.findViewById(R.id.item_tv_show_cover);
-            title = (TextView) itemView.findViewById(R.id.title);
-            average = (TextView) itemView.findViewById(R.id.average);
+            itemTvShowCover = (ImageView) itemView.findViewById(R.id.image_view_item_tv_show);
+            title = (TextView) itemView.findViewById(R.id.text_view_title);
+            average = (TextView) itemView.findViewById(R.id.text_view_average);
         }
 
         // Clean Picasso request
@@ -175,7 +175,7 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         public LoadingViewHolder(View itemView) {
             super(itemView);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.progressBarLoadMore);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
         }
     }
 }

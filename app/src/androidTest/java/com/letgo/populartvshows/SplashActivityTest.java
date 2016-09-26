@@ -31,7 +31,7 @@ public class SplashActivityTest  {
     @Test
     public void ensureSplashTextProgressIsDisplayed() {
         // Type text and then press the button.
-        onView(withId(R.id.splash_title))
+        onView(withId(R.id.text_view_splash_title))
                 .check(matches(withText("Popular Tv Shows")));
     }
 

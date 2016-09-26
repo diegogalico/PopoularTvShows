@@ -36,7 +36,7 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     ConfigurationPresenterImpl mConfigurationPresenter;
 
     @Optional
-    @InjectView(R.id.progress_bar)
+    @InjectView(R.id.progress_bar_splash)
     View mProgressBar;
 
     @Optional
@@ -44,15 +44,15 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     LinearLayout mLinearLayoutError;
 
     @Optional
-    @InjectView(R.id.splash_title)
+    @InjectView(R.id.text_view_splash_title)
     TextView mSplashTitle;
 
     @Optional
-    @InjectView(R.id.error_subtitle)
+    @InjectView(R.id.text_view_error_subtitle)
     TextView mErrorSubtitle;
 
     @Optional
-    @InjectView(R.id.retry)
+    @InjectView(R.id.button_retry)
     Button mRetry;
 
     public static SplashFragment newInstance() {

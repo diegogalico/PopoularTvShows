@@ -35,19 +35,19 @@ public class TvShowDetailFragment extends BaseFragment {
     android.support.v7.widget.Toolbar mToolbar;
 
     @Optional
-    @InjectView(R.id.overview)
+    @InjectView(R.id.text_view_overview)
     TextView mOverview;
 
     @Optional
-    @InjectView(R.id.vote_average)
+    @InjectView(R.id.text_view_vote_average)
     TextView mVoteAverage;
 
     @Optional
-    @InjectView(R.id.first_air_date)
+    @InjectView(R.id.text_view_first_air_date)
     TextView mFirstAirDate;
 
     @Optional
-    @InjectView(R.id.tv_show_image)
+    @InjectView(R.id.image_view_tv_show)
     ImageView mImage;
 
     public static TvShowDetailFragment newInstance(TvShow tvShow) {
