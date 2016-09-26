@@ -1,13 +1,10 @@
 package com.letgo.populartvshows.app.dependencyinjection.modules;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import com.letgo.populartvshows.BuildConfig;
-import com.letgo.populartvshows.app.Constants;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.letgo.populartvshows.BuildConfig;
+import com.letgo.populartvshows.app.Constants;
 import com.letgo.populartvshows.app.PopularTvShowsApplication;
 
 import java.io.IOException;
@@ -44,12 +41,6 @@ public class NetworkModule {
 
     public NetworkModule(String baseUrl) {
         this.mBaseUrl = baseUrl;
-    }
-
-    @Provides
-    @Singleton
-    SharedPreferences providesSharedPreferences(PopularTvShowsApplication application) {
-        return PreferenceManager.getDefaultSharedPreferences(application);
     }
 
     @Provides

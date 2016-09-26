@@ -8,6 +8,7 @@ import com.letgo.populartvshows.presentation.presenters.impl.SimilarTvShowsPrese
 import javax.inject.Inject;
 
 import rx.Observer;
+import timber.log.Timber;
 
 /**
  * @author diego.galico
@@ -50,10 +51,12 @@ public class SimilarTvShowsInteractorImpl implements SimilarTvShowsInteractor, O
     @Override
     public void onError(Throwable e) {
         mSimilarTvShowsPresenter.onErrorResponse(e.getMessage());
+        Timber.e(e, "onError");
     }
 
     @Override
     public void onNext(TvShowsWrapper tvShowsWrapper) {
         mSimilarTvShowsPresenter.onSimilarTvShowsResponse(tvShowsWrapper.getTvShowInfo());
+        Timber.d(tvShowsWrapper.toString());
     }
 }

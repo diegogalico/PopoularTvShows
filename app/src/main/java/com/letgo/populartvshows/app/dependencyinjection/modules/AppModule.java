@@ -1,5 +1,8 @@
 package com.letgo.populartvshows.app.dependencyinjection.modules;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.letgo.populartvshows.app.PopularTvShowsApplication;
 
 import javax.inject.Singleton;
@@ -23,6 +26,13 @@ public class AppModule {
     @Singleton
     PopularTvShowsApplication providesApplication() {
         return mApplication;
+    }
+
+
+    @Provides
+    @Singleton
+    SharedPreferences providesSharedPreferences(PopularTvShowsApplication popularTvShowsApplication) {
+        return PreferenceManager.getDefaultSharedPreferences(popularTvShowsApplication);
     }
 
 }

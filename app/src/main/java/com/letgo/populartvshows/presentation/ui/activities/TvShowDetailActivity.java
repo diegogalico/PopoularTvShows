@@ -1,5 +1,7 @@
 package com.letgo.populartvshows.presentation.ui.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -74,9 +76,6 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
 
         if (savedInstanceState == null) {
             mSimilarTvShowsPresenter.attachView(this);
-        } else {
-            initializeFromParams(savedInstanceState);
-
         }
 
         // Toolbar initialization
@@ -105,7 +104,10 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
      */
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK,returnIntent);
+        finish();
+        // Right to left transition animation when activity finished
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
     }
 
@@ -123,13 +125,9 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
         PopularTvShowsApplication app = (PopularTvShowsApplication) getApplication();
 
         DaggerSimilarTvShowsComponent.builder()
-                .appComponent(app.getAppComponent())
-                .similarTvShowsModule(new SimilarTvShowsModule(mTvShow.getId()))
-                .build().inject(this);
-    }
-
-    private void initializeFromParams(Bundle savedInstanceState) {
-
+                                     .appComponent(app.getAppComponent())
+                                     .similarTvShowsModule(new SimilarTvShowsModule(mTvShow.getId()))
+                                     .build().inject(this);
     }
 
     /**

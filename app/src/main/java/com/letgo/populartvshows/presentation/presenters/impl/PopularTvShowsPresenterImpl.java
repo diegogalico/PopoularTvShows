@@ -1,5 +1,6 @@
 package com.letgo.populartvshows.presentation.presenters.impl;
 
+import com.letgo.populartvshows.app.Constants;
 import com.letgo.populartvshows.domain.interactors.TvShowsInteractor;
 import com.letgo.populartvshows.domain.model.entities.TvShow;
 import com.letgo.populartvshows.presentation.presenters.PopularTvShowsPresenter;
@@ -38,7 +39,9 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter, TvS
     @Override
     public void start() {
         updateTvShowsList = false;
-
+        if(Constants.START_PAGINATION){
+            mGetPopularTvShowsInteractor.setPage(PAGE_NUMBER);
+        }
         if (mTvShowsView.isTheListEmpty()) {
             mTvShowsView.showProgress();
             mGetPopularTvShowsInteractor.setPresenter(this);

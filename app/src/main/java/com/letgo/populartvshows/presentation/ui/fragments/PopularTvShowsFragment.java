@@ -32,6 +32,7 @@ import com.letgo.populartvshows.presentation.ui.activities.TvShowDetailActivity;
 import com.letgo.populartvshows.presentation.ui.adapters.PopularTvShowsAdapter;
 import com.letgo.populartvshows.utils.NetworkUtils;
 import com.letgo.populartvshows.utils.RecyclerItemClickListener;
+import com.letgo.populartvshows.utils.StringUtils;
 import com.letgo.populartvshows.utils.ViewType;
 
 import java.util.List;
@@ -164,7 +165,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
 
         // Toolbar initialization
         ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("");
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(StringUtils.EMPTY_STRING);
 
         // Retry clicked
         mRetry.setOnClickListener(new View.OnClickListener() {
@@ -236,9 +237,9 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
                             TvShow tvShowObject = mTvShowsAdapter.getTvShowsList().get(position);
                             tvShowDetailActivityIntent.putExtra(TV_SHOW_OBJECT, new Gson().toJson(tvShowObject));
 
-                            getActivity().startActivity(tvShowDetailActivityIntent);
+                            getActivity().startActivityForResult(tvShowDetailActivityIntent, 1);
 
-                            /// Left to right transition animation when activity started
+                            // Left to right transition animation when activity started
                             getActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.hold);
                         }
                     }

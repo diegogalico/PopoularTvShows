@@ -8,6 +8,7 @@ import com.letgo.populartvshows.presentation.presenters.impl.PopularTvShowsPrese
 import javax.inject.Inject;
 
 import rx.Observer;
+import timber.log.Timber;
 
 /**
  * @author diego.galico
@@ -55,6 +56,7 @@ public class TvShowsInteractorImpl implements TvShowsInteractor, Observer<TvShow
     @Override
     public void onError(Throwable e) {
         mPopularTvShowsPresenter.onErrorResponse(e.getMessage());
+        Timber.e(e, "onError");
     }
 
     @Override

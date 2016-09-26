@@ -13,11 +13,13 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 /**
  * @author diego.galico
  *
  * RestTvShows class is in charge of calling {@link TheMovieApiInterface} in order to get API responses
+ *
  */
 public class RestTvShows implements RestData {
 
@@ -32,8 +34,9 @@ public class RestTvShows implements RestData {
     public void getConfiguration(ConfigurationInteractorImpl interactor) {
         Observable<Configuration> configuration = mTheMovieApiInterface.getConfiguration(Constants.API_KEY);
         configuration.subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(interactor);
+                     .observeOn(AndroidSchedulers.mainThread())
+                     .subscribe(interactor);
+        Timber.d("Downloading configuration: %s", "http://api.themoviedb.org/3/configuration");
     }
 
     @Override
@@ -42,6 +45,7 @@ public class RestTvShows implements RestData {
         tvShow.subscribeOn(Schedulers.newThread())
               .observeOn(AndroidSchedulers.mainThread())
               .subscribe(interactor);
+        Timber.d("Downloading tv shows by page: %s", "http://api.themoviedb.org/3/tv/top_rated/" + page);
     }
 
     @Override
@@ -50,6 +54,6 @@ public class RestTvShows implements RestData {
         configuration.subscribeOn(Schedulers.newThread())
                      .observeOn(AndroidSchedulers.mainThread())
                      .subscribe(interactor);
-
+        Timber.d("Downloading similar tv shows: %s", "http://api.themoviedb.org/3/similar/" + tvShowId);
     }
 }

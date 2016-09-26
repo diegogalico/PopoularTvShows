@@ -9,6 +9,7 @@ import com.letgo.populartvshows.presentation.presenters.impl.ConfigurationPresen
 import javax.inject.Inject;
 
 import rx.Observer;
+import timber.log.Timber;
 
 /**
  * @author diego.galico
@@ -43,9 +44,9 @@ public class ConfigurationInteractorImpl implements ConfigurationInteractor, Obs
         String posterImageSize = Constants.DEFAULT_IMAGE_SIZE;
         String backdropImageSize = Constants.DEFAULT_IMAGE_SIZE;
         for (String posterSize : configuration.getImages().getPosterSizes()) {
-             if(posterSize.equals(Constants.POSTER_IMAGE_SIZE)){
-                 posterImageSize = posterSize;
-             }
+            if(posterSize.equals(Constants.POSTER_IMAGE_SIZE)){
+                posterImageSize = posterSize;
+            }
         }
         for (String backdropSize : configuration.getImages().getBackdropSizes()) {
             if(backdropSize.equals(Constants.BACKDROP_IMAGE_SIZE)){
@@ -69,6 +70,7 @@ public class ConfigurationInteractorImpl implements ConfigurationInteractor, Obs
     @Override
     public void onError(Throwable e) {
         mConfigurationPresenter.onErrorResponse(e.getMessage());
+        Timber.e(e, "onError");
     }
 
     @Override

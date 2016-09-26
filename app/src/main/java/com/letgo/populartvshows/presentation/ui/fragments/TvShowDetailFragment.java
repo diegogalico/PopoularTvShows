@@ -28,6 +28,7 @@ public class TvShowDetailFragment extends BaseFragment {
 
     private TvShow mTvShow;
     private static final String TV_SHOW_OBJECT = "tv_show_object";
+    private static final String TAG = "TvShowDetailFragment";
 
     @Optional
     @InjectView(R.id.toolbar)
@@ -87,9 +88,19 @@ public class TvShowDetailFragment extends BaseFragment {
         Picasso.with(getContext())
                .load(imageUrl)
                .placeholder(R.drawable.ic_placeholder)
+               .tag(TAG)
                .fit().centerCrop()
                .into(mImage);
 
         return view;
+    }
+
+    /**
+     * Cancel Picasso request when fragment destroyed
+     */
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Picasso.with(getContext()).cancelRequest(mImage);
     }
 }

@@ -4,6 +4,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import timber.log.Timber;
+
 /**
  * @author diego.galico
  *
@@ -29,7 +31,7 @@ public class StringUtils {
         try {
             date = fmt.parse(dateString);
         } catch (ParseException e) {
-            e.printStackTrace();
+            Timber.e(e, "onError");
         }
 
         return fmtOut.format(date);

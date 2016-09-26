@@ -29,6 +29,7 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     private Context mContext;
     private List<TvShow> mTvShows;
+    private static final String TAG = "PopularTvShowsAdapter";
 
     public PopularTvShowsAdapter(List<TvShow> tvShows) {
         mTvShows = tvShows;
@@ -43,11 +44,11 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (viewType == ViewType.VIEW_TYPE_ITEM.getValue()) {
             this.mContext = viewGroup.getContext();
             View view = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.item_popular_tv_show, viewGroup, false);
+                                      .inflate(R.layout.item_popular_tv_show, viewGroup, false);
             return new TvShowViewHolder(view);
         } else if (viewType == ViewType.VIEW_TYPE_LOADING.getValue()) {
             View view = LayoutInflater.from(viewGroup.getContext())
-                    .inflate(R.layout.item_loading, viewGroup, false);
+                                      .inflate(R.layout.item_loading, viewGroup, false);
             return new LoadingViewHolder(view);
         }
         return null;
@@ -71,19 +72,21 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
             // Load image using Picasso
             Picasso.with(mContext)
-                    .load(imageUrl)
-                    .fit().centerCrop()
-                    .into(tvShowViewHolder.itemTvShowCover, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                            // Tv show is ready to be clicked
-                            mTvShows.get(position).setTvShowReady(true);
-                        }
-                        @Override
-                        public void onError() {
+                   .load(imageUrl)
+                   .fit().centerCrop()
+                   .tag(TAG)
+                   .into(tvShowViewHolder.itemTvShowCover, new Callback() {
+                       @Override
+                       public void onSuccess() {
+                           // Tv show is ready to be clicked
+                           mTvShows.get(position).setTvShowReady(true);
+                       }
 
-                        }
-                    });
+                       @Override
+                       public void onError() {
+
+                       }
+                   });
         } else if (holder instanceof LoadingViewHolder) {
             LoadingViewHolder loadingViewHolder = (LoadingViewHolder) holder;
             loadingViewHolder.progressBar.setIndeterminate(true);
@@ -92,6 +95,7 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     /**
      * Is tv show ready to be clicked
+     *
      * @param position
      * @return
      */
@@ -109,6 +113,7 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
     /**
      * Append tv shows to actual list
+     *
      * @param tvShowList
      */
     public void appendTvShows(List<TvShow> tvShowList) {
@@ -131,6 +136,19 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return mTvShows.size();
     }
 
+    /**
+     * Cancel Picasso request when view recycled
+     * @param holder
+     */
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+        if (holder instanceof TvShowViewHolder) {
+            ((TvShowViewHolder) holder).cleanup();
+        }
+
+    }
+
     class TvShowViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView itemTvShowCover;
@@ -142,6 +160,13 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             itemTvShowCover = (ImageView) itemView.findViewById(R.id.item_tv_show_cover);
             title = (TextView) itemView.findViewById(R.id.title);
             average = (TextView) itemView.findViewById(R.id.average);
+        }
+
+        // Clean Picasso request
+        public void cleanup() {
+            Picasso.with(mContext)
+                   .cancelRequest(itemTvShowCover);
+            itemTvShowCover.setImageDrawable(null);
         }
     }
 

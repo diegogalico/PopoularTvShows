@@ -1,8 +1,11 @@
 package com.letgo.populartvshows.presentation.ui.activities;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.letgo.populartvshows.R;
+import com.letgo.populartvshows.app.Constants;
 import com.letgo.populartvshows.presentation.ui.fragments.PopularTvShowsFragment;
 
 /**
@@ -35,4 +38,20 @@ public class PopularTvShowsActivity extends BaseActivity {
         return R.layout.activity_container;
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Constants.START_PAGINATION = true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if (resultCode == Activity.RESULT_OK) {
+                Constants.START_PAGINATION = false;
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+            }
+        }
+    }
 }
