@@ -20,4 +20,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="DialogOrActivityTheme" parent="MyMaterialTheme.Base"/>
+
 </resources>

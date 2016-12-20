@@ -26,6 +26,7 @@
             android:configChanges="orientation|screenSize" />
         <activity
             android:name=".presentation.ui.activities.TvShowDetailActivity"
+            android:theme="@style/DialogOrActivityTheme"
             android:configChanges="orientation|screenSize" />
     </application>
 </manifest>
