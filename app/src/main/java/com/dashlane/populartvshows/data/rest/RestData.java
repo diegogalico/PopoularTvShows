@@ -6,8 +6,8 @@ import com.dashlane.populartvshows.domain.interactors.impl.TvShowsInteractorImpl
 
 /**
  * @author diego.galico
- *         <p/>
- *         RestData is an interface that define methods to obtain API responses
+ *
+ * RestData is an interface that define methods to obtain API responses
  */
 public interface RestData {
 

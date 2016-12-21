@@ -17,10 +17,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dashlane.populartvshows.R;
-import com.dashlane.populartvshows.app.Constants;
-import com.dashlane.populartvshows.app.PopularTvShowsApplication;
-import com.dashlane.populartvshows.app.dependencyinjection.components.DaggerTvShowsComponent;
-import com.dashlane.populartvshows.app.dependencyinjection.modules.TvShowsModule;
+import com.dashlane.populartvshows.presentation.app.Constants;
+import com.dashlane.populartvshows.presentation.app.PopularTvShowsApplication;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.DaggerTvShowsComponent;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.TvShowsModule;
 import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.presentation.presenters.PopularTvShowsPresenter;
 import com.dashlane.populartvshows.presentation.presenters.base.PresenterCache;
@@ -28,10 +28,10 @@ import com.dashlane.populartvshows.presentation.presenters.base.PresenterFactory
 import com.dashlane.populartvshows.presentation.presenters.impl.PopularTvShowsPresenterImpl;
 import com.dashlane.populartvshows.presentation.ui.activities.PopularTvShowsActivity;
 import com.dashlane.populartvshows.presentation.ui.adapters.PopularTvShowsAdapter;
-import com.dashlane.populartvshows.utils.NetworkUtils;
-import com.dashlane.populartvshows.utils.RecyclerItemClickListener;
-import com.dashlane.populartvshows.utils.StringUtils;
-import com.dashlane.populartvshows.utils.ViewType;
+import com.dashlane.populartvshows.presentation.utils.NetworkUtils;
+import com.dashlane.populartvshows.presentation.utils.RecyclerItemClickListener;
+import com.dashlane.populartvshows.presentation.utils.StringUtils;
+import com.dashlane.populartvshows.presentation.utils.ViewType;
 
 import java.util.List;
 
@@ -52,6 +52,8 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
         void onTvShowClicked(TvShow tvShow);
     }
 
+    private OnTvShowListener onTvShowListener;
+
     private boolean mLoading = true;
     int mPastVisibleItems, mVisibleItemCount, mTotalItemCount;
 
@@ -62,8 +64,6 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
 
     private PresenterCache presenterCache =
             PresenterCache.getInstance();
-
-    private OnTvShowListener onTvShowListener;
 
     @Inject
     PopularTvShowsPresenterImpl mTvShowsPresenter;

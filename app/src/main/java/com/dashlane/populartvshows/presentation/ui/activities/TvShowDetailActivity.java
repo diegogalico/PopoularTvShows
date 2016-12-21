@@ -8,14 +8,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.dashlane.populartvshows.R;
-import com.dashlane.populartvshows.app.PopularTvShowsApplication;
-import com.dashlane.populartvshows.app.dependencyinjection.components.DaggerSimilarTvShowsComponent;
-import com.dashlane.populartvshows.app.dependencyinjection.modules.SimilarTvShowsModule;
+import com.dashlane.populartvshows.presentation.app.PopularTvShowsApplication;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.DaggerSimilarTvShowsComponent;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.SimilarTvShowsModule;
 import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.presentation.presenters.SimilarTvShowsPresenter;
 import com.dashlane.populartvshows.presentation.presenters.impl.SimilarTvShowsPresenterImpl;
 import com.dashlane.populartvshows.presentation.ui.adapters.SimilarTvShowsAdapter;
-import com.dashlane.populartvshows.utils.StringUtils;
+import com.dashlane.populartvshows.presentation.utils.StringUtils;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -28,15 +28,14 @@ import butterknife.InjectView;
 
 /**
  * @author diego.galico
- *         <p>
- *         Activity in charge of handling similar tv shows pager
+ *
+ * Activity in charge of handling similar tv shows pager
  */
 public class TvShowDetailActivity extends SecondLevelActivity implements SimilarTvShowsPresenter.SimilarTvShowsView, ViewPager.OnPageChangeListener {
 
     private static final String TV_SHOW_OBJECT = "tv_show_object";
     private TvShow mTvShow;
     private List<TvShow> mSimilarTvShowList = new ArrayList<>();
-
     private SimilarTvShowsAdapter mAdapter;
 
     @Inject

@@ -8,9 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dashlane.populartvshows.R;
-import com.dashlane.populartvshows.app.Constants;
+import com.dashlane.populartvshows.presentation.app.Constants;
 import com.dashlane.populartvshows.data.entities.TvShow;
-import com.dashlane.populartvshows.utils.StringUtils;
+import com.dashlane.populartvshows.presentation.utils.StringUtils;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 

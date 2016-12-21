@@ -1,7 +1,7 @@
 package com.dashlane.populartvshows.data.rest;
 
-import com.dashlane.populartvshows.app.Constants;
-import com.dashlane.populartvshows.app.PopularTvShowsApplication;
+import com.dashlane.populartvshows.presentation.app.Constants;
+import com.dashlane.populartvshows.presentation.app.PopularTvShowsApplication;
 import com.dashlane.populartvshows.domain.interactors.impl.ConfigurationInteractorImpl;
 import com.dashlane.populartvshows.domain.interactors.impl.SimilarTvShowsInteractorImpl;
 import com.dashlane.populartvshows.domain.interactors.impl.TvShowsInteractorImpl;

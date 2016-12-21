@@ -1,7 +1,7 @@
 package com.dashlane.populartvshows.presentation.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,13 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dashlane.populartvshows.R;
-import com.dashlane.populartvshows.app.PopularTvShowsApplication;
-import com.dashlane.populartvshows.app.dependencyinjection.components.DaggerConfigurationComponent;
-import com.dashlane.populartvshows.app.dependencyinjection.modules.ConfigurationModule;
+import com.dashlane.populartvshows.presentation.app.PopularTvShowsApplication;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.DaggerConfigurationComponent;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.ConfigurationModule;
 import com.dashlane.populartvshows.presentation.presenters.ConfigurationPresenter;
 import com.dashlane.populartvshows.presentation.presenters.impl.ConfigurationPresenterImpl;
-import com.dashlane.populartvshows.presentation.ui.activities.PopularTvShowsActivity;
-import com.dashlane.populartvshows.utils.NetworkUtils;
+import com.dashlane.populartvshows.presentation.utils.NetworkUtils;
 
 import javax.inject.Inject;
 
@@ -30,6 +29,12 @@ import butterknife.InjectView;
  *
  */
 public class SplashFragment extends BaseFragment implements ConfigurationPresenter.ConfigurationView {
+
+    public interface NavigationHandler {
+        void navigateToTvShowActivity();
+    }
+
+    private NavigationHandler navigationHandler;
 
     @Inject
     ConfigurationPresenterImpl mConfigurationPresenter;
@@ -60,8 +65,6 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
 
         // Initialize dependency injection
         initializeDependencyInjector();
-
-        mConfigurationPresenter.attachView(this);
     }
 
     @Override
@@ -83,9 +86,31 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        try {
+            navigationHandler = (NavigationHandler) getActivity();
+        } catch (ClassCastException ex) {
+            throw new ClassCastException(getActivity().toString() + " must implement navigateToTvShowActivity");
+        }
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mConfigurationPresenter.attachView(this);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         mConfigurationPresenter.start();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mConfigurationPresenter.attachView(null);
     }
 
     /**
@@ -121,8 +146,6 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
 
     @Override
     public void startPopularTvShowsActivity() {
-        Intent myIntent = new Intent(getActivity(), PopularTvShowsActivity.class);
-        startActivity(myIntent);
-        getActivity().finish();
+        navigationHandler.navigateToTvShowActivity();
     }
 }
