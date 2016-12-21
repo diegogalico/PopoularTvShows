@@ -1,4 +1,4 @@
-package com.dashlane.populartvshows.app.dependencyinjection.modules;
+package com.dashlane.populartvshows.presentation.app.dependencyinjection.modules;
 
 import com.dashlane.populartvshows.domain.interactors.TvShowsInteractor;
 import com.dashlane.populartvshows.domain.interactors.impl.TvShowsInteractorImpl;

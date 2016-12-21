@@ -1,4 +1,4 @@
-package com.dashlane.populartvshows.utils;
+package com.dashlane.populartvshows.presentation.utils;
 
 import java.util.Collections;
 import java.util.HashMap;

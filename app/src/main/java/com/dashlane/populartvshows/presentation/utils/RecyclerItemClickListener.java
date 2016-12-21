@@ -1,4 +1,4 @@
-package com.dashlane.populartvshows.utils;
+package com.dashlane.populartvshows.presentation.utils;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

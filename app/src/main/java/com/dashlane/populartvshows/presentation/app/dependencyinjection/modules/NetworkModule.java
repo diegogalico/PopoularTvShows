@@ -1,11 +1,11 @@
-package com.dashlane.populartvshows.app.dependencyinjection.modules;
+package com.dashlane.populartvshows.presentation.app.dependencyinjection.modules;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.dashlane.populartvshows.BuildConfig;
-import com.dashlane.populartvshows.app.Constants;
-import com.dashlane.populartvshows.app.PopularTvShowsApplication;
+import com.dashlane.populartvshows.presentation.app.Constants;
+import com.dashlane.populartvshows.presentation.app.PopularTvShowsApplication;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

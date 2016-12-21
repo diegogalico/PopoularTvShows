@@ -1,6 +1,6 @@
-package com.dashlane.populartvshows.app;
+package com.dashlane.populartvshows.presentation.app;
 
-import com.dashlane.populartvshows.utils.StringUtils;
+import com.dashlane.populartvshows.presentation.utils.StringUtils;
 
 /**
  * @author diego.galico

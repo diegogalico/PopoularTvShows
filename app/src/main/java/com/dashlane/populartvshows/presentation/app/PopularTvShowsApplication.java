@@ -1,21 +1,21 @@
-package com.dashlane.populartvshows.app;
+package com.dashlane.populartvshows.presentation.app;
 
 import android.app.Application;
 import android.content.Context;
 
 import com.crittercism.app.Crittercism;
 import com.dashlane.populartvshows.BuildConfig;
-import com.dashlane.populartvshows.app.dependencyinjection.components.AppComponent;
-import com.dashlane.populartvshows.app.dependencyinjection.components.DaggerAppComponent;
-import com.dashlane.populartvshows.app.dependencyinjection.components.DaggerNetworkComponent;
-import com.dashlane.populartvshows.app.dependencyinjection.components.DaggerTheMovieComponent;
-import com.dashlane.populartvshows.app.dependencyinjection.components.NetworkComponent;
-import com.dashlane.populartvshows.app.dependencyinjection.components.TheMovieComponent;
-import com.dashlane.populartvshows.app.dependencyinjection.modules.AppModule;
-import com.dashlane.populartvshows.app.dependencyinjection.modules.DomainModule;
-import com.dashlane.populartvshows.app.dependencyinjection.modules.NetworkModule;
-import com.dashlane.populartvshows.app.dependencyinjection.modules.TheMovieModule;
-import com.dashlane.populartvshows.utils.NetworkUtils;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.AppComponent;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.DaggerAppComponent;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.DaggerNetworkComponent;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.DaggerTheMovieComponent;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.NetworkComponent;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.TheMovieComponent;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.AppModule;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.DomainModule;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.NetworkModule;
+import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.TheMovieModule;
+import com.dashlane.populartvshows.presentation.utils.NetworkUtils;
 import com.squareup.leakcanary.LeakCanary;
 
 import java.util.Locale;

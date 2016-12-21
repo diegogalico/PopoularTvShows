@@ -1,4 +1,4 @@
-package com.dashlane.populartvshows.app.dependencyinjection.scopes;
+package com.dashlane.populartvshows.presentation.app.dependencyinjection.scopes;
 
 import java.lang.annotation.Retention;
 

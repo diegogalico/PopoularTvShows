@@ -1,6 +1,6 @@
-package com.dashlane.populartvshows.app.dependencyinjection.modules;
+package com.dashlane.populartvshows.presentation.app.dependencyinjection.modules;
 
-import com.dashlane.populartvshows.app.PopularTvShowsApplication;
+import com.dashlane.populartvshows.presentation.app.PopularTvShowsApplication;
 import com.dashlane.populartvshows.data.rest.RestTvShows;
 
 import javax.inject.Singleton;

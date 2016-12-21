@@ -1,9 +1,9 @@
-package com.dashlane.populartvshows.app.dependencyinjection.modules;
+package com.dashlane.populartvshows.presentation.app.dependencyinjection.modules;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.dashlane.populartvshows.app.PopularTvShowsApplication;
+import com.dashlane.populartvshows.presentation.app.PopularTvShowsApplication;
 
 import javax.inject.Singleton;
 

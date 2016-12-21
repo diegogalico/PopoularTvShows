@@ -1,4 +1,4 @@
-package com.dashlane.populartvshows.utils;
+package com.dashlane.populartvshows.presentation.utils;
 
 import com.dashlane.populartvshows.presentation.ui.adapters.PopularTvShowsAdapter;
 
