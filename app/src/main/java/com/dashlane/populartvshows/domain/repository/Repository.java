@@ -1,6 +1,6 @@
 package com.dashlane.populartvshows.domain.repository;
 
-import com.dashlane.populartvshows.domain.model.entities.TvShow;
+import com.dashlane.populartvshows.data.entities.TvShow;
 
 /**
  * @author diego.galico

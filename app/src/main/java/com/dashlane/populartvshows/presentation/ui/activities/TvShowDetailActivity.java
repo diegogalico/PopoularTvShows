@@ -7,16 +7,16 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import com.google.gson.Gson;
 import com.dashlane.populartvshows.R;
 import com.dashlane.populartvshows.app.PopularTvShowsApplication;
 import com.dashlane.populartvshows.app.dependencyinjection.components.DaggerSimilarTvShowsComponent;
 import com.dashlane.populartvshows.app.dependencyinjection.modules.SimilarTvShowsModule;
-import com.dashlane.populartvshows.domain.model.entities.TvShow;
+import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.presentation.presenters.SimilarTvShowsPresenter;
 import com.dashlane.populartvshows.presentation.presenters.impl.SimilarTvShowsPresenterImpl;
 import com.dashlane.populartvshows.presentation.ui.adapters.SimilarTvShowsAdapter;
 import com.dashlane.populartvshows.utils.StringUtils;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +25,11 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.Optional;
 
 /**
  * @author diego.galico
- *
- * Activity in charge of handling similar tv shows pager
- *
+ *         <p>
+ *         Activity in charge of handling similar tv shows pager
  */
 public class TvShowDetailActivity extends SecondLevelActivity implements SimilarTvShowsPresenter.SimilarTvShowsView, ViewPager.OnPageChangeListener {
 
@@ -44,11 +42,9 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
     @Inject
     SimilarTvShowsPresenterImpl mSimilarTvShowsPresenter;
 
-    @Optional
     @InjectView(R.id.pager)
     ViewPager mPager;
 
-    @Optional
     @InjectView(R.id.toolbar_detail)
     Toolbar mToolbar;
 
@@ -81,7 +77,13 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
         // Toolbar initialization
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+
+        boolean tabletSize = getResources().getBoolean(R.bool.isTablet);
+        if (tabletSize) {
+            mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_close));
+        } else {
+            mToolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_action_back));
+        }
 
         //Toolbar back button click
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -105,7 +107,7 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
     @Override
     public void onBackPressed() {
         Intent returnIntent = new Intent();
-        setResult(Activity.RESULT_OK,returnIntent);
+        setResult(Activity.RESULT_OK, returnIntent);
         finish();
         // Right to left transition animation when activity finished
         overridePendingTransition(R.anim.hold, R.anim.slide_out_right);
@@ -125,13 +127,14 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
         PopularTvShowsApplication app = (PopularTvShowsApplication) getApplication();
 
         DaggerSimilarTvShowsComponent.builder()
-                                     .appComponent(app.getAppComponent())
-                                     .similarTvShowsModule(new SimilarTvShowsModule(mTvShow.getId()))
-                                     .build().inject(this);
+                .appComponent(app.getAppComponent())
+                .similarTvShowsModule(new SimilarTvShowsModule(mTvShow.getId()))
+                .build().inject(this);
     }
 
     /**
      * Set similar tv shows to adapter
+     *
      * @param similarTvShowList
      */
     @Override
@@ -168,6 +171,7 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
 
     /**
      * Set toolbar title depending pager position
+     *
      * @param position
      */
     @Override

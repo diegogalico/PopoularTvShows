@@ -2,7 +2,7 @@ package com.dashlane.populartvshows.app.dependencyinjection.modules;
 
 import com.dashlane.populartvshows.domain.interactors.TvShowsInteractor;
 import com.dashlane.populartvshows.domain.interactors.impl.TvShowsInteractorImpl;
-import com.dashlane.populartvshows.domain.model.rest.RestTvShows;
+import com.dashlane.populartvshows.data.rest.RestTvShows;
 
 import dagger.Module;
 import dagger.Provides;

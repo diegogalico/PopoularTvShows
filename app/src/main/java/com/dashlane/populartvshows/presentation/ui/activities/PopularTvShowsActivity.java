@@ -7,7 +7,7 @@ import android.os.Bundle;
 import com.google.gson.Gson;
 import com.dashlane.populartvshows.R;
 import com.dashlane.populartvshows.app.Constants;
-import com.dashlane.populartvshows.domain.model.entities.TvShow;
+import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.presentation.ui.fragments.PopularTvShowsFragment;
 
 /**

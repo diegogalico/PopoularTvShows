@@ -22,7 +22,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.Optional;
 
 /**
  * @author diego.galico
@@ -35,23 +34,18 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
     @Inject
     ConfigurationPresenterImpl mConfigurationPresenter;
 
-    @Optional
     @InjectView(R.id.progress_bar_splash)
     View mProgressBar;
 
-    @Optional
     @InjectView(R.id.layout_error_splash)
     LinearLayout mLinearLayoutError;
 
-    @Optional
     @InjectView(R.id.text_view_splash_title)
     TextView mSplashTitle;
 
-    @Optional
     @InjectView(R.id.text_view_error_subtitle)
     TextView mErrorSubtitle;
 
-    @Optional
     @InjectView(R.id.button_retry)
     Button mRetry;
 

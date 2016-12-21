@@ -1,4 +1,4 @@
-package com.dashlane.populartvshows.domain.model.entities;
+package com.dashlane.populartvshows.data.entities;
 
 import java.io.Serializable;
 import java.util.List;

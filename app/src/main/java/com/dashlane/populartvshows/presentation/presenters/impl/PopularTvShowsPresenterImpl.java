@@ -2,7 +2,7 @@ package com.dashlane.populartvshows.presentation.presenters.impl;
 
 import com.dashlane.populartvshows.app.Constants;
 import com.dashlane.populartvshows.domain.interactors.TvShowsInteractor;
-import com.dashlane.populartvshows.domain.model.entities.TvShow;
+import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.presentation.presenters.PopularTvShowsPresenter;
 
 import java.util.List;

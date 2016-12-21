@@ -7,16 +7,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.dashlane.populartvshows.R;
 import com.dashlane.populartvshows.app.Constants;
-import com.dashlane.populartvshows.domain.model.entities.TvShow;
+import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.utils.StringUtils;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.Optional;
 
 /**
  * @author diego.galico
@@ -30,23 +29,15 @@ public class TvShowDetailFragment extends BaseFragment {
     private static final String TV_SHOW_OBJECT = "tv_show_object";
     private static final String TAG = "TvShowDetailFragment";
 
-    @Optional
-    @InjectView(R.id.toolbar)
-    android.support.v7.widget.Toolbar mToolbar;
-
-    @Optional
     @InjectView(R.id.text_view_overview)
     TextView mOverview;
 
-    @Optional
     @InjectView(R.id.text_view_vote_average)
     TextView mVoteAverage;
 
-    @Optional
     @InjectView(R.id.text_view_first_air_date)
     TextView mFirstAirDate;
 
-    @Optional
     @InjectView(R.id.image_view_tv_show)
     ImageView mImage;
 

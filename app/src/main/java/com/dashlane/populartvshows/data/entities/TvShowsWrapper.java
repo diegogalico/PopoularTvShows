@@ -1,4 +1,4 @@
-package com.dashlane.populartvshows.domain.model.entities;
+package com.dashlane.populartvshows.data.entities;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

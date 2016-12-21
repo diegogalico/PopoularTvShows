@@ -1,6 +1,6 @@
 package com.dashlane.populartvshows.presentation.presenters;
 
-import com.dashlane.populartvshows.domain.model.entities.TvShow;
+import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.presentation.presenters.base.BasePresenter;
 import com.dashlane.populartvshows.presentation.ui.BaseView;
 import com.dashlane.populartvshows.presentation.ui.activities.TvShowDetailActivity;

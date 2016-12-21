@@ -1,7 +1,7 @@
-package com.dashlane.populartvshows.domain.model.rest;
+package com.dashlane.populartvshows.data.rest;
 
-import com.dashlane.populartvshows.domain.model.entities.Configuration;
-import com.dashlane.populartvshows.domain.model.entities.TvShowsWrapper;
+import com.dashlane.populartvshows.data.entities.Configuration;
+import com.dashlane.populartvshows.data.entities.TvShowsWrapper;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;

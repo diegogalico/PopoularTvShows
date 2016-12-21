@@ -9,7 +9,9 @@ import java.util.Map;
  *
  * Class that maps status code with status message
  *
+ * ApiStatusCode is not used, is preserved in order to use it in the future
  */
+@SuppressWarnings("unused")
 public class ApiStatusCode {
 
     private static final Map<Integer, String> hashMapApiStatusCode;

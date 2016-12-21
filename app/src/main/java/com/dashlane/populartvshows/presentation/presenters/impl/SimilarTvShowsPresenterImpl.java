@@ -1,7 +1,7 @@
 package com.dashlane.populartvshows.presentation.presenters.impl;
 
 import com.dashlane.populartvshows.domain.interactors.SimilarTvShowsInteractor;
-import com.dashlane.populartvshows.domain.model.entities.TvShow;
+import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.presentation.presenters.SimilarTvShowsPresenter;
 
 import java.util.List;

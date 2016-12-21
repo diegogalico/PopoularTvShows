@@ -2,8 +2,8 @@ package com.dashlane.populartvshows.domain.interactors.impl;
 
 import com.dashlane.populartvshows.app.Constants;
 import com.dashlane.populartvshows.domain.interactors.ConfigurationInteractor;
-import com.dashlane.populartvshows.domain.model.entities.Configuration;
-import com.dashlane.populartvshows.domain.model.rest.RestData;
+import com.dashlane.populartvshows.data.entities.Configuration;
+import com.dashlane.populartvshows.data.rest.RestData;
 import com.dashlane.populartvshows.presentation.presenters.impl.ConfigurationPresenterImpl;
 
 import javax.inject.Inject;

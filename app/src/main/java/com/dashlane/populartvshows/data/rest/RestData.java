@@ -1,4 +1,4 @@
-package com.dashlane.populartvshows.domain.model.rest;
+package com.dashlane.populartvshows.data.rest;
 
 import com.dashlane.populartvshows.domain.interactors.impl.ConfigurationInteractorImpl;
 import com.dashlane.populartvshows.domain.interactors.impl.SimilarTvShowsInteractorImpl;

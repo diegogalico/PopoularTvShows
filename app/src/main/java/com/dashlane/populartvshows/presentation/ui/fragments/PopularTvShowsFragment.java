@@ -21,7 +21,7 @@ import com.dashlane.populartvshows.app.Constants;
 import com.dashlane.populartvshows.app.PopularTvShowsApplication;
 import com.dashlane.populartvshows.app.dependencyinjection.components.DaggerTvShowsComponent;
 import com.dashlane.populartvshows.app.dependencyinjection.modules.TvShowsModule;
-import com.dashlane.populartvshows.domain.model.entities.TvShow;
+import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.presentation.presenters.PopularTvShowsPresenter;
 import com.dashlane.populartvshows.presentation.presenters.base.PresenterCache;
 import com.dashlane.populartvshows.presentation.presenters.base.PresenterFactory;
@@ -39,7 +39,6 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.Optional;
 
 /**
  * @author diego.galico
@@ -69,31 +68,24 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
     @Inject
     PopularTvShowsPresenterImpl mTvShowsPresenter;
 
-    @Optional
     @InjectView(R.id.toolbar)
     android.support.v7.widget.Toolbar mToolbar;
 
-    @Optional
     @InjectView(R.id.progress_bar)
     View mProgressBar;
 
-    @Optional
     @InjectView(R.id.swipe_refresh_layout)
     SwipeRefreshLayout mSwipeRefreshLayout;
 
-    @Optional
     @InjectView(R.id.recycler_view_popular_tv_shows)
     RecyclerView mRecyclerView;
 
-    @Optional
     @InjectView(R.id.layout_error)
     LinearLayout mLinearLayoutError;
 
-    @Optional
     @InjectView(R.id.text_view_error_subtitle)
     TextView mErrorSubtitle;
 
-    @Optional
     @InjectView(R.id.button_retry)
     Button mRetry;
 

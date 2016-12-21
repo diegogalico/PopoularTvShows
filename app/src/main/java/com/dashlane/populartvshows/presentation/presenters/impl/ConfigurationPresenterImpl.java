@@ -1,7 +1,7 @@
 package com.dashlane.populartvshows.presentation.presenters.impl;
 
 import com.dashlane.populartvshows.domain.interactors.ConfigurationInteractor;
-import com.dashlane.populartvshows.domain.model.entities.Configuration;
+import com.dashlane.populartvshows.data.entities.Configuration;
 import com.dashlane.populartvshows.presentation.presenters.ConfigurationPresenter;
 
 import javax.inject.Inject;

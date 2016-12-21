@@ -1,6 +1,6 @@
 package com.dashlane.populartvshows.app.dependencyinjection.modules;
 
-import com.dashlane.populartvshows.domain.model.rest.TheMovieApiInterface;
+import com.dashlane.populartvshows.data.rest.TheMovieApiInterface;
 
 import dagger.Module;
 import dagger.Provides;

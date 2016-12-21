@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.dashlane.populartvshows.R;
 import com.dashlane.populartvshows.app.Constants;
-import com.dashlane.populartvshows.domain.model.entities.TvShow;
+import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.utils.StringUtils;
 import com.dashlane.populartvshows.utils.ViewType;
 import com.squareup.picasso.Callback;

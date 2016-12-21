@@ -1,12 +1,12 @@
-package com.dashlane.populartvshows.domain.model.rest;
+package com.dashlane.populartvshows.data.rest;
 
 import com.dashlane.populartvshows.app.Constants;
 import com.dashlane.populartvshows.app.PopularTvShowsApplication;
 import com.dashlane.populartvshows.domain.interactors.impl.ConfigurationInteractorImpl;
 import com.dashlane.populartvshows.domain.interactors.impl.SimilarTvShowsInteractorImpl;
 import com.dashlane.populartvshows.domain.interactors.impl.TvShowsInteractorImpl;
-import com.dashlane.populartvshows.domain.model.entities.Configuration;
-import com.dashlane.populartvshows.domain.model.entities.TvShowsWrapper;
+import com.dashlane.populartvshows.data.entities.Configuration;
+import com.dashlane.populartvshows.data.entities.TvShowsWrapper;
 
 import javax.inject.Inject;
 
