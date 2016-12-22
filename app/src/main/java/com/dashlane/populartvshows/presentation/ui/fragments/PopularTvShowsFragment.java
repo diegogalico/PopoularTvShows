@@ -162,6 +162,18 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mTvShowsPresenter.attachView(null);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        presenterCache.removePresenter(TAG);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_popular_tv_shows, container, false);

@@ -119,6 +119,12 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
         mSimilarTvShowsPresenter.start();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSimilarTvShowsPresenter.attachView(null);
+    }
+
     /**
      * Initialize dependency injection
      */
