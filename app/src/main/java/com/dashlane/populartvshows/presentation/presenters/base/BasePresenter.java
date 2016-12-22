@@ -16,4 +16,9 @@ public interface BasePresenter {
      */
     void stop();
 
+    /**
+     * Called when the presenter is destroyed, i.e when an activity
+     * or a fragment is destroyed
+     */
+    void destroy();
 }

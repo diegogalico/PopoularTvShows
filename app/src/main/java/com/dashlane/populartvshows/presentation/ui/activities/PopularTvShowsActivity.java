@@ -4,11 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.gson.Gson;
 import com.dashlane.populartvshows.R;
+import com.dashlane.populartvshows.domain.TvShowData;
 import com.dashlane.populartvshows.presentation.app.Constants;
-import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.presentation.ui.fragments.PopularTvShowsFragment;
+import com.google.gson.Gson;
 
 /**
  * @author diego.galico
@@ -60,7 +60,7 @@ public class PopularTvShowsActivity extends BaseActivity implements PopularTvSho
     }
 
     @Override
-    public void onTvShowClicked(TvShow tvShow) {
+    public void onTvShowClicked(TvShowData tvShow) {
         Intent tvShowDetailActivityIntent = new Intent(this, TvShowDetailActivity.class);
 
         // Send tvShowObject via intent

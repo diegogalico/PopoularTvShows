@@ -1,8 +1,12 @@
 package com.dashlane.populartvshows.data.rest;
 
+import com.dashlane.populartvshows.data.entities.ConfigurationEntity;
+import com.dashlane.populartvshows.data.entities.TvShowsWrapperEntity;
 import com.dashlane.populartvshows.domain.interactors.impl.ConfigurationInteractorImpl;
 import com.dashlane.populartvshows.domain.interactors.impl.SimilarTvShowsInteractorImpl;
 import com.dashlane.populartvshows.domain.interactors.impl.TvShowsInteractorImpl;
+
+import rx.Observable;
 
 /**
  * @author diego.galico
@@ -15,22 +19,19 @@ public interface RestData {
      * Request popular tv shows by page and suscribe the response to {@link TvShowsInteractorImpl} observer
      *
      * @param page
-     * @param interactor
      */
-    void getTvShowsByPage(int page, TvShowsInteractorImpl interactor);
+    Observable<TvShowsWrapperEntity> getTvShowsByPage(int page);
 
     /**
      * Request configuration and suscribe the response to {@link ConfigurationInteractorImpl} observer
      *
-     * @param interator
      */
-    void getConfiguration(ConfigurationInteractorImpl interator);
+    Observable<ConfigurationEntity> getConfiguration();
 
     /**
      * Request similar tv shows for given tv show id and suscribe the response to {@link SimilarTvShowsInteractorImpl} observer
      *
-     * @param interactor
      * @param tvShowId
      */
-    void getSimilarTvShows(SimilarTvShowsInteractorImpl interactor, int tvShowId);
+    Observable<TvShowsWrapperEntity> getSimilarTvShows(int tvShowId);
 }

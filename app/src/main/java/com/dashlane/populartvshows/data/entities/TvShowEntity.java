@@ -6,10 +6,10 @@ import java.util.List;
 /**
  * @author diego.galico
  *
- * Class that model TvShow information
+ * Class that model TvShowEntity information
  *
  */
-public class TvShow implements Serializable{
+public class TvShowEntity implements Serializable{
 
     String poster_path;
     double popularity;
@@ -24,7 +24,7 @@ public class TvShow implements Serializable{
     int vote_count;
     String name;
     String original_name;
-    boolean tvShowReady;
+    boolean tv_show_ready;
 
     public String getPosterPath() {
         return poster_path;
@@ -132,11 +132,11 @@ public class TvShow implements Serializable{
 
     public void setTvShowReady(boolean tvShowReady) {
 
-        this.tvShowReady = tvShowReady;
+        this.tv_show_ready = tvShowReady;
     }
 
     public boolean isTvShowReady() {
 
-        return tvShowReady;
+        return tv_show_ready;
     }
 }

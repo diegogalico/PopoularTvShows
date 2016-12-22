@@ -5,11 +5,11 @@ import java.util.List;
 /**
  * @author diego.galico
  *
- * Class that model Configuration information
+ * Class that model ConfigurationEntity information
  *
  */
-public class Configuration {
-    private ImageInfo images;
+public class ConfigurationEntity {
+    private ImageInfoEntity images;
     private List<String> change_keys;
 
     public List<String> getChangeKeys() {
@@ -20,11 +20,11 @@ public class Configuration {
         this.change_keys = changeKeys;
     }
 
-    public ImageInfo getImages() {
+    public ImageInfoEntity getImages() {
         return images;
     }
 
-    public void setImages(ImageInfo images) {
+    public void setImages(ImageInfoEntity images) {
         this.images = images;
     }
 }

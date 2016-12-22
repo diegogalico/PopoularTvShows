@@ -10,8 +10,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.dashlane.populartvshows.R;
+import com.dashlane.populartvshows.domain.TvShowData;
 import com.dashlane.populartvshows.presentation.app.Constants;
-import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.presentation.utils.StringUtils;
 import com.dashlane.populartvshows.presentation.utils.ViewType;
 import com.squareup.picasso.Callback;
@@ -28,14 +28,14 @@ import java.util.List;
 public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private List<TvShow> mTvShows;
+    private List<TvShowData> mTvShows;
     private static final String TAG = "PopularTvShowsAdapter";
 
-    public PopularTvShowsAdapter(List<TvShow> tvShows) {
+    public PopularTvShowsAdapter(List<TvShowData> tvShows) {
         mTvShows = tvShows;
     }
 
-    public List<TvShow> getTvShowsList() {
+    public List<TvShowData> getTvShowsList() {
         return mTvShows;
     }
 
@@ -62,7 +62,7 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof TvShowViewHolder) {
-            TvShow tvShow = mTvShows.get(position);
+            TvShowData tvShow = mTvShows.get(position);
             TvShowViewHolder tvShowViewHolder = (TvShowViewHolder) holder;
             tvShowViewHolder.title.setText(tvShow.getName());
             tvShowViewHolder.average.setText(StringUtils.EMPTY_STRING + tvShow.getVoteAverage());
@@ -116,7 +116,7 @@ public class PopularTvShowsAdapter extends RecyclerView.Adapter<RecyclerView.Vie
      *
      * @param tvShowList
      */
-    public void appendTvShows(List<TvShow> tvShowList) {
+    public void appendTvShows(List<TvShowData> tvShowList) {
         //Remove pagination loading item
         removePaginationLoading();
         mTvShows.addAll(tvShowList);

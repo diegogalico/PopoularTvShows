@@ -1,14 +1,19 @@
 package com.dashlane.populartvshows.domain.interactors.impl;
 
-import com.dashlane.populartvshows.domain.interactors.SimilarTvShowsInteractor;
-import com.dashlane.populartvshows.data.entities.TvShowsWrapper;
+import com.dashlane.populartvshows.data.entities.TvShowsWrapperEntity;
 import com.dashlane.populartvshows.data.rest.RestData;
-import com.dashlane.populartvshows.presentation.presenters.impl.SimilarTvShowsPresenterImpl;
+import com.dashlane.populartvshows.domain.TvShowData;
+import com.dashlane.populartvshows.domain.executors.PostExecutionThread;
+import com.dashlane.populartvshows.domain.executors.ThreadExecutor;
+import com.dashlane.populartvshows.domain.interactors.SimilarTvShowsInteractor;
+import com.dashlane.populartvshows.domain.mapper.TvShowEntityDataMapper;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
-import rx.Observer;
-import timber.log.Timber;
+import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * @author diego.galico
@@ -16,47 +21,28 @@ import timber.log.Timber;
  * SimilarTvShowsInteractorImpl class is in charge of calling {@link RestData} to obtain similar tv shows response
  *
  */
-public class SimilarTvShowsInteractorImpl implements SimilarTvShowsInteractor, Observer<TvShowsWrapper> {
+public class SimilarTvShowsInteractorImpl extends SimilarTvShowsInteractor {
 
     private final RestData mRestData;
     private final int mTvShowId;
-    private SimilarTvShowsPresenterImpl mSimilarTvShowsPresenter;
+    private final TvShowEntityDataMapper mTvShowEntityDataMapper;
 
     @Inject
-    public SimilarTvShowsInteractorImpl(RestData mRestData, int tvShowId) {
+    public SimilarTvShowsInteractorImpl(RestData mRestData, int tvShowId, ThreadExecutor threadExecutor,
+                                        PostExecutionThread postExecutionThread,
+                                        TvShowEntityDataMapper tvShowEntityDataMapper) {
+        super(threadExecutor, postExecutionThread);
         this.mRestData = mRestData;
         this.mTvShowId = tvShowId;
+        mTvShowEntityDataMapper = tvShowEntityDataMapper;
     }
 
     @Override
-    public void requestSimilarTvShowsDetail(int tvShowId) {
-        mRestData.getSimilarTvShows(this, tvShowId);
-    }
-
-    @Override
-    public void setPresenter(SimilarTvShowsPresenterImpl presenter) {
-        mSimilarTvShowsPresenter = presenter;
-    }
-
-    @Override
-    public void execute() {
-        requestSimilarTvShowsDetail(mTvShowId);
-    }
-
-    @Override
-    public void onCompleted() {
-
-    }
-
-    @Override
-    public void onError(Throwable e) {
-        mSimilarTvShowsPresenter.onErrorResponse(e.getMessage());
-        Timber.e(e, "onError");
-    }
-
-    @Override
-    public void onNext(TvShowsWrapper tvShowsWrapper) {
-        mSimilarTvShowsPresenter.onSimilarTvShowsResponse(tvShowsWrapper.getTvShowInfo());
-        Timber.d(tvShowsWrapper.toString());
+    protected Observable<List<TvShowData>> buildInteractorObservable() {
+        return mRestData.getSimilarTvShows(mTvShowId).map(new Func1<TvShowsWrapperEntity, List<TvShowData>>() {
+            @Override public List<TvShowData> call(TvShowsWrapperEntity tvShowsWrapperEntity) {
+                return mTvShowEntityDataMapper.transform(tvShowsWrapperEntity);
+            }
+        });
     }
 }

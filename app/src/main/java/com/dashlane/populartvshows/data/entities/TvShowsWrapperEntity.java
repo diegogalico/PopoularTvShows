@@ -9,19 +9,19 @@ import java.util.List;
 /**
  * @author diego.galico
  *
- * Class that model TvShowsWrapper information
+ * Class that model TvShowsWrapperEntity information
  *
  */
-public class TvShowsWrapper implements Serializable {
+public class TvShowsWrapperEntity implements Serializable {
 
     private String page;
 
     @SerializedName("results")
     @Expose
-    private List<TvShow> tvShowInfo;
+    private List<TvShowEntity> tv_show_info;
 
-    public TvShowsWrapper(List<TvShow> tvShowInfo) {
-        this.tvShowInfo = tvShowInfo;
+    public TvShowsWrapperEntity(List<TvShowEntity> tvShowInfo) {
+        this.tv_show_info = tvShowInfo;
     }
 
     public String getPage() {
@@ -32,11 +32,11 @@ public class TvShowsWrapper implements Serializable {
         this.page = page;
     }
 
-    public List<TvShow> getTvShowInfo() {
-        return tvShowInfo;
+    public List<TvShowEntity> getTvShowInfo() {
+        return tv_show_info;
     }
 
-    public void setTvShowInfo(List<TvShow> tvShowInfo) {
-        this.tvShowInfo = tvShowInfo;
+    public void setTvShowInfo(List<TvShowEntity> tvShowInfo) {
+        this.tv_show_info = tvShowInfo;
     }
 }

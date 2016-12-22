@@ -5,10 +5,10 @@ import java.util.List;
 /**
  * @author diego.galico
  *
- * Class that model ImageInfo information
+ * Class that model ImageInfoEntity information
  *
  */
-public class ImageInfo {
+public class ImageInfoEntity {
     private String base_url;
     private String secure_base_url;
     private List<String> backdrop_sizes;

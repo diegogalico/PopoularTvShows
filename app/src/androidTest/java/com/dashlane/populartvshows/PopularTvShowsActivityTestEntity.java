@@ -20,11 +20,11 @@ import static org.hamcrest.CoreMatchers.not;
 /**
  * @author diego.galico
  *
- * PopularTvShowsActivityTest test class
+ * PopularTvShowsActivityTestEntity test class
  *
  */
 @RunWith(AndroidJUnit4.class)
-public class PopularTvShowsActivityTest {
+public class PopularTvShowsActivityTestEntity {
 
     @Rule
     public ActivityTestRule<PopularTvShowsActivity> mActivityRule =

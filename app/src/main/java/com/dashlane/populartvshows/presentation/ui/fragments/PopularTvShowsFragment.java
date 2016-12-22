@@ -1,5 +1,6 @@
 package com.dashlane.populartvshows.presentation.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,11 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dashlane.populartvshows.R;
+import com.dashlane.populartvshows.domain.TvShowData;
 import com.dashlane.populartvshows.presentation.app.Constants;
 import com.dashlane.populartvshows.presentation.app.PopularTvShowsApplication;
 import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.DaggerTvShowsComponent;
 import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.TvShowsModule;
-import com.dashlane.populartvshows.data.entities.TvShow;
 import com.dashlane.populartvshows.presentation.presenters.PopularTvShowsPresenter;
 import com.dashlane.populartvshows.presentation.presenters.base.PresenterCache;
 import com.dashlane.populartvshows.presentation.presenters.base.PresenterFactory;
@@ -44,12 +45,11 @@ import butterknife.InjectView;
  * @author diego.galico
  *
  * Fragment in charge of showing popular tv shows
- *
  */
 public class PopularTvShowsFragment extends BaseFragment implements PopularTvShowsPresenter.PopularTvShowsView {
 
     public interface OnTvShowListener {
-        void onTvShowClicked(TvShow tvShow);
+        void onTvShowClicked(TvShowData tvShow);
     }
 
     private OnTvShowListener onTvShowListener;
@@ -131,9 +131,9 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
         PopularTvShowsApplication app = (PopularTvShowsApplication) getActivity().getApplication();
 
         DaggerTvShowsComponent.builder()
-                              .appComponent(app.getAppComponent())
-                              .tvShowsModule(new TvShowsModule())
-                              .build().inject(this);
+                .appComponent(app.getAppComponent())
+                .tvShowsModule(new TvShowsModule())
+                .build().inject(this);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_popular_tv_shows, container, false);
 
         // Inject fragment and view to ButterKnife
@@ -177,12 +177,11 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
         mRetry.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Retrieve tv shows information
-                if (NetworkUtils.hasNetwork(getContext())) {
-                    mLinearLayoutError.setVisibility(View.GONE);
-                    if (isTheListEmpty()) {
-                        mTvShowsPresenter.start();
-                    }
+                mLinearLayoutError.setVisibility(View.GONE);
+                if (isTheListEmpty()) {
+                    mTvShowsPresenter.start();
                 }
+
             }
         });
 
@@ -236,7 +235,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
 
                         // if Picasso retrieved item image
                         if (mTvShowsAdapter.isTvShowReady(position)) {
-                            TvShow tvShowObject = mTvShowsAdapter.getTvShowsList().get(position);
+                            TvShowData tvShowObject = mTvShowsAdapter.getTvShowsList().get(position);
                             onTvShowListener.onTvShowClicked(tvShowObject);
                         }
                     }
@@ -274,7 +273,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
     }
 
     @Override
-    public void showPopularTvShows(List<TvShow> tvShowList) {
+    public void showPopularTvShows(List<TvShowData> tvShowList) {
         mSwipeRefreshLayout.setRefreshing(false);
         mTvShowsAdapter = new PopularTvShowsAdapter(tvShowList);
         mRecyclerView.setAdapter(mTvShowsAdapter);
@@ -287,7 +286,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
     }
 
     @Override
-    public void appendPopularTvShows(List<TvShow> tvShowList) {
+    public void appendPopularTvShows(List<TvShowData> tvShowList) {
         mLoading = true;
         mTvShowsAdapter.appendTvShows(tvShowList);
         mLinearLayoutError.setVisibility(View.GONE);
@@ -324,6 +323,11 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
         TextView tv = (TextView) view.findViewById(android.support.design.R.id.snackbar_text);
         tv.setGravity(Gravity.CENTER_HORIZONTAL);
         snack.show();
+    }
+
+    @Override
+    public Context getContext() {
+        return getActivity().getApplicationContext();
     }
 
 }

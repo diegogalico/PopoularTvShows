@@ -1,5 +1,6 @@
 package com.dashlane.populartvshows.presentation.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -15,7 +16,6 @@ import com.dashlane.populartvshows.presentation.app.dependencyinjection.componen
 import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.ConfigurationModule;
 import com.dashlane.populartvshows.presentation.presenters.ConfigurationPresenter;
 import com.dashlane.populartvshows.presentation.presenters.impl.ConfigurationPresenterImpl;
-import com.dashlane.populartvshows.presentation.utils.NetworkUtils;
 
 import javax.inject.Inject;
 
@@ -26,7 +26,6 @@ import butterknife.InjectView;
  * @author diego.galico
  *
  * Fragment in charge of showing splash screen
- *
  */
 public class SplashFragment extends BaseFragment implements ConfigurationPresenter.ConfigurationView {
 
@@ -76,10 +75,9 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
         mRetry.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 // Retrieve configuration information
-                if (NetworkUtils.hasNetwork(getContext())) {
-                    mConfigurationPresenter.start();
-                    mLinearLayoutError.setVisibility(View.GONE);
-                }
+                mConfigurationPresenter.start();
+                mLinearLayoutError.setVisibility(View.GONE);
+
             }
         });
         return view;
@@ -113,6 +111,10 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
         mConfigurationPresenter.attachView(null);
     }
 
+    @Override public Context getContext() {
+        return getActivity().getApplicationContext();
+    }
+
     /**
      * Initialize dependency injection
      */
@@ -121,9 +123,9 @@ public class SplashFragment extends BaseFragment implements ConfigurationPresent
         PopularTvShowsApplication app = (PopularTvShowsApplication) getActivity().getApplication();
 
         DaggerConfigurationComponent.builder()
-                                    .appComponent(app.getAppComponent())
-                                    .configurationModule(new ConfigurationModule())
-                                    .build().inject(this);
+                .appComponent(app.getAppComponent())
+                .configurationModule(new ConfigurationModule())
+                .build().inject(this);
     }
 
 

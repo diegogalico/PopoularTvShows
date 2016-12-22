@@ -1,15 +1,18 @@
 package com.dashlane.populartvshows.domain.interactors.impl;
 
-import com.dashlane.populartvshows.presentation.app.Constants;
-import com.dashlane.populartvshows.domain.interactors.ConfigurationInteractor;
-import com.dashlane.populartvshows.data.entities.Configuration;
+import com.dashlane.populartvshows.data.entities.ConfigurationEntity;
 import com.dashlane.populartvshows.data.rest.RestData;
-import com.dashlane.populartvshows.presentation.presenters.impl.ConfigurationPresenterImpl;
+import com.dashlane.populartvshows.domain.ConfigurationData;
+import com.dashlane.populartvshows.domain.executors.PostExecutionThread;
+import com.dashlane.populartvshows.domain.executors.ThreadExecutor;
+import com.dashlane.populartvshows.domain.interactors.ConfigurationInteractor;
+import com.dashlane.populartvshows.domain.mapper.ConfigurationEntityDataMapper;
+import com.dashlane.populartvshows.presentation.app.Constants;
 
 import javax.inject.Inject;
 
-import rx.Observer;
-import timber.log.Timber;
+import rx.Observable;
+import rx.functions.Func1;
 
 /**
  * @author diego.galico
@@ -17,65 +20,46 @@ import timber.log.Timber;
  * ConfigurationInteractorImpl class is in charge of calling {@link RestData} to obtain configuration response
  *
  */
-public class ConfigurationInteractorImpl implements ConfigurationInteractor, Observer<Configuration> {
+public class ConfigurationInteractorImpl extends ConfigurationInteractor {
 
     private final RestData mRestData;
-    private ConfigurationPresenterImpl mConfigurationPresenter;
+    private final ConfigurationEntityDataMapper mConfigurationEntityDataMapper;
 
     @Inject
-    public ConfigurationInteractorImpl(RestData mRestData) {
+    public ConfigurationInteractorImpl(RestData mRestData, ThreadExecutor threadExecutor,
+                                       PostExecutionThread postExecutionThread,
+                                       ConfigurationEntityDataMapper configurationEntityDataMapper) {
+        super(threadExecutor, postExecutionThread);
         this.mRestData = mRestData;
+        mConfigurationEntityDataMapper = configurationEntityDataMapper;
     }
 
     @Override
-    public void requestConfiguration() {
-        mRestData.getConfiguration(this);
-    }
-
-    @Override
-    public void setPresenter(ConfigurationPresenterImpl presenter) {
-        mConfigurationPresenter = presenter;
-    }
-
-    @Override
-    public void setImageUrl(Configuration configuration) {
-        String posterUrl = configuration.getImages().getBaseUrl();
-        String backdropUrl = configuration.getImages().getBaseUrl();
+    public void setImageUrl(ConfigurationData configurationData) {
+        String posterUrl = configurationData.getBaseUrl();
+        String backdropUrl = configurationData.getBaseUrl();
         String posterImageSize = Constants.DEFAULT_IMAGE_SIZE;
         String backdropImageSize = Constants.DEFAULT_IMAGE_SIZE;
-        for (String posterSize : configuration.getImages().getPosterSizes()) {
+        for (String posterSize : configurationData.getPosterSizes()) {
             if(posterSize.equals(Constants.POSTER_IMAGE_SIZE)){
                 posterImageSize = posterSize;
             }
         }
-        for (String backdropSize : configuration.getImages().getBackdropSizes()) {
+        for (String backdropSize : configurationData.getBackdropSizes()) {
             if(backdropSize.equals(Constants.BACKDROP_IMAGE_SIZE)){
                 backdropImageSize = backdropSize;
             }
         }
-        Constants.IMAGE_URL_POSTER = posterUrl + posterImageSize;
-        Constants.IMAGE_URL_BACKDROP = backdropUrl + backdropImageSize;
+        configurationData.setImageUrlPoster(posterUrl + posterImageSize);
+        configurationData.setImageUrlBackDrop(backdropUrl + backdropImageSize);
     }
 
     @Override
-    public void execute() {
-        requestConfiguration();
+    protected Observable<ConfigurationData> buildInteractorObservable() {
+        return mRestData.getConfiguration().map(new Func1<ConfigurationEntity, ConfigurationData>() {
+            @Override public ConfigurationData call(ConfigurationEntity configurationEntity) {
+                return mConfigurationEntityDataMapper.transform(configurationEntity);
+            }
+        });
     }
-
-    @Override
-    public void onCompleted() {
-
-    }
-
-    @Override
-    public void onError(Throwable e) {
-        mConfigurationPresenter.onErrorResponse(e.getMessage());
-        Timber.e(e, "onError");
-    }
-
-    @Override
-    public void onNext(Configuration configuration) {
-        mConfigurationPresenter.onConfigurationResponse(configuration);
-    }
-
 }

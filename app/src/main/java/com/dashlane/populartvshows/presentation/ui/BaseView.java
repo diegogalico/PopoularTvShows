@@ -1,5 +1,7 @@
 package com.dashlane.populartvshows.presentation.ui;
 
+import android.content.Context;
+
 /**
  * @author diego.galico
  *
@@ -24,4 +26,9 @@ public interface BaseView {
      * @param message The error message to be displayed.
      */
     void showError(String message);
+
+    /**
+     * Get a {@link android.content.Context}.
+     */
+    Context getContext();
 }
