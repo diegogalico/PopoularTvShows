@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.dashlane.populartvshows.R;
 import com.dashlane.populartvshows.domain.TvShowData;
-import com.dashlane.populartvshows.presentation.app.Constants;
 import com.dashlane.populartvshows.presentation.app.PopularTvShowsApplication;
 import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.DaggerTvShowsComponent;
 import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.TvShowsModule;
@@ -197,7 +196,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
             }
         });
 
-        mLinearLayout = new GridLayoutManager(getActivity(), Constants.GRID_LAYOUT_COLUMNS);
+        mLinearLayout = new GridLayoutManager(getActivity(), getResources().getInteger(R.integer.tv_shows_grid_view_num_colums));
 
         // Return span size depending view type item in order to show centered pagination loading
         mLinearLayout.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -209,7 +208,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
                 if (itemViewType == ViewType.VIEW_TYPE_ITEM.getValue()) {
                     return 1;
                 } else if (itemViewType == ViewType.VIEW_TYPE_LOADING.getValue()) {
-                    return Constants.GRID_LAYOUT_COLUMNS; //number of columns of the grid
+                    return getResources().getInteger(R.integer.tv_shows_grid_view_num_colums); //number of columns of the grid
                 } else {
                     return -1;
                 }

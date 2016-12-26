@@ -1,7 +1,7 @@
 package com.dashlane.populartvshows.domain;
 
 /**
- * Created by Oliva on 12/22/16.
+ * Created by diego.galico
  */
 
 public class TvShowData {

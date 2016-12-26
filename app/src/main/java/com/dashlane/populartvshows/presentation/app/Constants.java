@@ -24,6 +24,5 @@ public class Constants {
     public static final String BACKDROP_IMAGE_SIZE = "w780";
     public static final String DEFAULT_IMAGE_SIZE = "original";
 
-    public static final int GRID_LAYOUT_COLUMNS = 2;
     public static boolean START_PAGINATION = false;
 }
