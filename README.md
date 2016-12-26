@@ -15,7 +15,7 @@ Popular Tv Shows            |  Tv Show Detail
 
 Popular Tv Shows (Tablet)           |  Tv Show Detail popup (Tablet)
 :-------------------------:|:-------------------------:
-!![alt tag](https://github.com/diegogalico/PopularTvShows/blob/master/tv_shows_tablet.png)  |  ![alt tag](https://github.com/diegogalico/PopularTvShows/blob/master/detail_tv_show_tablet.png)
+![alt tag](https://github.com/diegogalico/PopularTvShows/blob/master/tv_shows_tablet.png)  |  ![alt tag](https://github.com/diegogalico/PopularTvShows/blob/master/detail_tv_show_tablet.png)
 
 ### Used libraries
 
