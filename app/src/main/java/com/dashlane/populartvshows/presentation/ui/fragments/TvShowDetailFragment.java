@@ -8,8 +8,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dashlane.populartvshows.R;
-import com.dashlane.populartvshows.domain.TvShowData;
 import com.dashlane.populartvshows.presentation.app.Constants;
+import com.dashlane.populartvshows.presentation.models.TvShowModel;
 import com.dashlane.populartvshows.presentation.utils.StringUtils;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
@@ -25,7 +25,7 @@ import butterknife.InjectView;
  */
 public class TvShowDetailFragment extends BaseFragment {
 
-    private TvShowData mTvShow;
+    private TvShowModel mTvShow;
     private static final String TV_SHOW_OBJECT = "tv_show_object";
     private static final String TAG = "TvShowDetailFragment";
 
@@ -41,7 +41,7 @@ public class TvShowDetailFragment extends BaseFragment {
     @InjectView(R.id.image_view_tv_show)
     ImageView mImage;
 
-    public static TvShowDetailFragment newInstance(TvShowData tvShow) {
+    public static TvShowDetailFragment newInstance(TvShowModel tvShow) {
         TvShowDetailFragment tvShowDetailFragment = new TvShowDetailFragment();
 
         Bundle args = new Bundle();
@@ -55,9 +55,9 @@ public class TvShowDetailFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Convert json object to TvShowData object
+        // Convert json object to TvShowModel object
         String jsonMyObject = getArguments() != null ? getArguments().getString(TV_SHOW_OBJECT) : StringUtils.EMPTY_STRING;
-        mTvShow = new Gson().fromJson(jsonMyObject, TvShowData.class);
+        mTvShow = new Gson().fromJson(jsonMyObject, TvShowModel.class);
     }
 
     @Override

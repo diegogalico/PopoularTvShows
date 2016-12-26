@@ -6,6 +6,7 @@ import com.dashlane.populartvshows.domain.exception.ErrorBundle;
 import com.dashlane.populartvshows.domain.interactors.DefaultSubscriber;
 import com.dashlane.populartvshows.domain.interactors.SimilarTvShowsInteractor;
 import com.dashlane.populartvshows.presentation.exception.ErrorMessageFactory;
+import com.dashlane.populartvshows.presentation.mapper.TvShowModelDataMapper;
 import com.dashlane.populartvshows.presentation.presenters.SimilarTvShowsPresenter;
 
 import java.util.List;
@@ -24,10 +25,13 @@ public class SimilarTvShowsPresenterImpl implements SimilarTvShowsPresenter {
 
     private SimilarTvShowsView mSimilarTvShowsView;
     private SimilarTvShowsInteractor mGetSimilarTvShowsInteractor;
+    private final TvShowModelDataMapper mTvShowModelDataMapper;
 
     @Inject
-    public SimilarTvShowsPresenterImpl(SimilarTvShowsInteractor getSimilarTvShowsInteractor) {
+    public SimilarTvShowsPresenterImpl(SimilarTvShowsInteractor getSimilarTvShowsInteractor,
+                                       TvShowModelDataMapper tvShowModelDataMapper) {
         mGetSimilarTvShowsInteractor = getSimilarTvShowsInteractor;
+        mTvShowModelDataMapper = tvShowModelDataMapper;
     }
 
     /**
@@ -72,7 +76,7 @@ public class SimilarTvShowsPresenterImpl implements SimilarTvShowsPresenter {
          */
         @Override public void onNext(List<TvShowData> similarTvShowList) {
             mSimilarTvShowsView.hideProgress();
-            mSimilarTvShowsView.showSimilarTvShows(similarTvShowList);
+            mSimilarTvShowsView.showSimilarTvShows(mTvShowModelDataMapper.transform(similarTvShowList));
         }
     }
 

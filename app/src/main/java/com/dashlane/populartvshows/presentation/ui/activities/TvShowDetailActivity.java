@@ -9,10 +9,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.dashlane.populartvshows.R;
-import com.dashlane.populartvshows.domain.TvShowData;
 import com.dashlane.populartvshows.presentation.app.PopularTvShowsApplication;
 import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.DaggerSimilarTvShowsComponent;
 import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.SimilarTvShowsModule;
+import com.dashlane.populartvshows.presentation.models.TvShowModel;
 import com.dashlane.populartvshows.presentation.presenters.SimilarTvShowsPresenter;
 import com.dashlane.populartvshows.presentation.presenters.impl.SimilarTvShowsPresenterImpl;
 import com.dashlane.populartvshows.presentation.ui.adapters.SimilarTvShowsAdapter;
@@ -35,8 +35,8 @@ import butterknife.InjectView;
 public class TvShowDetailActivity extends SecondLevelActivity implements SimilarTvShowsPresenter.SimilarTvShowsView, ViewPager.OnPageChangeListener {
 
     private static final String TV_SHOW_OBJECT = "tv_show_object";
-    private TvShowData mTvShow;
-    private List<TvShowData> mSimilarTvShowList = new ArrayList<>();
+    private TvShowModel mTvShow;
+    private List<TvShowModel> mSimilarTvShowList = new ArrayList<>();
     private SimilarTvShowsAdapter mAdapter;
 
     @Inject
@@ -53,14 +53,14 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
         super.onCreate(savedInstanceState);
         Bundle extras = getIntent().getExtras();
 
-        // Get TvShowData from extra bundle
+        // Get TvShowModel from extra bundle
         String jsonMyObject = StringUtils.EMPTY_STRING;
         if (extras != null) {
             jsonMyObject = extras.getString(TV_SHOW_OBJECT);
         }
 
         // Convert json object to TvShowEntity object
-        mTvShow = new Gson().fromJson(jsonMyObject, TvShowData.class);
+        mTvShow = new Gson().fromJson(jsonMyObject, TvShowModel.class);
 
         mSimilarTvShowList.add(mTvShow);
 
@@ -144,7 +144,7 @@ public class TvShowDetailActivity extends SecondLevelActivity implements Similar
      * @param similarTvShowList
      */
     @Override
-    public void showSimilarTvShows(List<TvShowData> similarTvShowList) {
+    public void showSimilarTvShows(List<TvShowModel> similarTvShowList) {
         mSimilarTvShowList.addAll(similarTvShowList);
         mAdapter.setSimilarTvShows(similarTvShowList);
         mPager.setAdapter(mAdapter);

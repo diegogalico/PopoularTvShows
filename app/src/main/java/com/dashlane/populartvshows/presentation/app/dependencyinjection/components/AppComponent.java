@@ -7,6 +7,7 @@ import com.dashlane.populartvshows.domain.mapper.ConfigurationEntityDataMapper;
 import com.dashlane.populartvshows.domain.mapper.TvShowEntityDataMapper;
 import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.AppModule;
 import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.DomainModule;
+import com.dashlane.populartvshows.presentation.mapper.TvShowModelDataMapper;
 
 import javax.inject.Singleton;
 
@@ -27,5 +28,6 @@ public interface AppComponent {
     PostExecutionThread postExecutionThread();
     ConfigurationEntityDataMapper configurationEntityDataMapper();
     TvShowEntityDataMapper tvShowEntityDataMapper();
+    TvShowModelDataMapper tvShowModelDataMapper();
 }
 

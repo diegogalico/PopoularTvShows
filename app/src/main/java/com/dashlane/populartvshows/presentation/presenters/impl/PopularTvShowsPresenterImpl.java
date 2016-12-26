@@ -1,12 +1,13 @@
 package com.dashlane.populartvshows.presentation.presenters.impl;
 
+import com.dashlane.populartvshows.domain.TvShowData;
 import com.dashlane.populartvshows.domain.exception.DefaultErrorBundle;
 import com.dashlane.populartvshows.domain.exception.ErrorBundle;
 import com.dashlane.populartvshows.domain.interactors.DefaultSubscriber;
-import com.dashlane.populartvshows.domain.TvShowData;
 import com.dashlane.populartvshows.domain.interactors.TvShowsInteractor;
 import com.dashlane.populartvshows.presentation.app.Constants;
 import com.dashlane.populartvshows.presentation.exception.ErrorMessageFactory;
+import com.dashlane.populartvshows.presentation.mapper.TvShowModelDataMapper;
 import com.dashlane.populartvshows.presentation.presenters.PopularTvShowsPresenter;
 
 import java.util.List;
@@ -25,13 +26,17 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter {
 
     private PopularTvShowsView mTvShowsView;
     private TvShowsInteractor mGetPopularTvShowsInteractor;
+    private final TvShowModelDataMapper mTvShowModelDataMapper;
+
     private boolean mIsLoading = false;
     private boolean mUpdateTvShowsList = false;
     private static final int PAGE_NUMBER = 1;
 
     @Inject
-    public PopularTvShowsPresenterImpl(TvShowsInteractor getPopularTvShowsInteractor) {
+    public PopularTvShowsPresenterImpl(TvShowsInteractor getPopularTvShowsInteractor,
+                                       TvShowModelDataMapper tvShowModelDataMapper) {
         mGetPopularTvShowsInteractor = getPopularTvShowsInteractor;
+        mTvShowModelDataMapper = tvShowModelDataMapper;
     }
 
     /**
@@ -89,13 +94,13 @@ public class PopularTvShowsPresenterImpl implements PopularTvShowsPresenter {
         @Override public void onNext(List<TvShowData> popularTvShowList) {
             mGetPopularTvShowsInteractor.addPageNumber();
             if(mUpdateTvShowsList){
-                mTvShowsView.showPopularTvShows(popularTvShowList);
+                mTvShowsView.showPopularTvShows(mTvShowModelDataMapper.transform(popularTvShowList));
             }else{
                 if (mTvShowsView.isTheListEmpty()) {
                     mTvShowsView.hideProgress();
-                    mTvShowsView.showPopularTvShows(popularTvShowList);
+                    mTvShowsView.showPopularTvShows(mTvShowModelDataMapper.transform(popularTvShowList));
                 } else {
-                    mTvShowsView.appendPopularTvShows(popularTvShowList);
+                    mTvShowsView.appendPopularTvShows(mTvShowModelDataMapper.transform(popularTvShowList));
                 }
             }
             mIsLoading = false;

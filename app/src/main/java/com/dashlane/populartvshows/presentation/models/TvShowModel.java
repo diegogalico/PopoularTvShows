@@ -1,10 +1,12 @@
-package com.dashlane.populartvshows.domain;
+package com.dashlane.populartvshows.presentation.models;
 
 /**
- * Created by diego.galico
+ * @author diego.galico
+ *
+ * Class that represents ConfigurationEntity information in the presentation layer
+ *
  */
-
-public class TvShowData {
+public class TvShowModel {
     String poster_path;
     int id;
     String backdrop_path;
@@ -12,6 +14,7 @@ public class TvShowData {
     String overview;
     String first_air_date;
     String name;
+    boolean tv_show_ready;
 
     public String getPosterPath() {
         return poster_path;
@@ -67,5 +70,13 @@ public class TvShowData {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setTvShowReady(boolean tvShowReady) {
+        this.tv_show_ready = tvShowReady;
+    }
+
+    public boolean isTvShowReady() {
+        return tv_show_ready;
     }
 }

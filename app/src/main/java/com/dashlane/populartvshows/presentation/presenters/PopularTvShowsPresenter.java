@@ -1,6 +1,6 @@
 package com.dashlane.populartvshows.presentation.presenters;
 
-import com.dashlane.populartvshows.domain.TvShowData;
+import com.dashlane.populartvshows.presentation.models.TvShowModel;
 import com.dashlane.populartvshows.presentation.presenters.base.BasePresenter;
 import com.dashlane.populartvshows.presentation.ui.BaseView;
 import com.dashlane.populartvshows.presentation.ui.fragments.PopularTvShowsFragment;
@@ -24,7 +24,7 @@ public interface PopularTvShowsPresenter extends BasePresenter {
          * Show popular tv shows
          * @param tvShowList
          */
-        void showPopularTvShows(List<TvShowData> tvShowList);
+        void showPopularTvShows(List<TvShowModel> tvShowList);
 
         /**
          * Return true if the list of tv shows is empty
@@ -36,6 +36,6 @@ public interface PopularTvShowsPresenter extends BasePresenter {
          * Append new pagination of tv shows to actual tv shows list
          * @param tvShowList
          */
-        void appendPopularTvShows(List<TvShowData> tvShowList);
+        void appendPopularTvShows(List<TvShowModel> tvShowList);
     }
 }

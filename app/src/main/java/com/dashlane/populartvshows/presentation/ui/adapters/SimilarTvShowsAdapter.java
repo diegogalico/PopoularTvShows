@@ -4,8 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.dashlane.populartvshows.data.entities.TvShowEntity;
-import com.dashlane.populartvshows.domain.TvShowData;
+import com.dashlane.populartvshows.presentation.models.TvShowModel;
 import com.dashlane.populartvshows.presentation.ui.fragments.TvShowDetailFragment;
 
 import java.util.ArrayList;
@@ -19,14 +18,14 @@ import java.util.List;
  */
 public class SimilarTvShowsAdapter extends FragmentStatePagerAdapter {
 
-    private List<TvShowData> mTvShows;
+    private List<TvShowModel> mTvShows;
 
     /**
      * Add selected tv show ro tv show list
      * @param fm
      * @param selectedTvShow
      */
-    public SimilarTvShowsAdapter(FragmentManager fm, TvShowData selectedTvShow) {
+    public SimilarTvShowsAdapter(FragmentManager fm, TvShowModel selectedTvShow) {
         super(fm);
         mTvShows = new ArrayList<>();
         mTvShows.add(0, selectedTvShow);
@@ -36,7 +35,7 @@ public class SimilarTvShowsAdapter extends FragmentStatePagerAdapter {
      * Append similar tv shows to actual list
      * @param tvShows
      */
-    public void setSimilarTvShows(List<TvShowData> tvShows) {
+    public void setSimilarTvShows(List<TvShowModel> tvShows) {
             mTvShows.addAll(tvShows);
             notifyDataSetChanged();
     }

@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.dashlane.populartvshows.R;
-import com.dashlane.populartvshows.domain.TvShowData;
 import com.dashlane.populartvshows.presentation.app.Constants;
+import com.dashlane.populartvshows.presentation.models.TvShowModel;
 import com.dashlane.populartvshows.presentation.ui.fragments.PopularTvShowsFragment;
 import com.google.gson.Gson;
 
@@ -60,7 +60,7 @@ public class PopularTvShowsActivity extends BaseActivity implements PopularTvSho
     }
 
     @Override
-    public void onTvShowClicked(TvShowData tvShow) {
+    public void onTvShowClicked(TvShowModel tvShow) {
         Intent tvShowDetailActivityIntent = new Intent(this, TvShowDetailActivity.class);
 
         // Send tvShowObject via intent

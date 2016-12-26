@@ -1,6 +1,6 @@
 package com.dashlane.populartvshows.presentation.presenters;
 
-import com.dashlane.populartvshows.domain.TvShowData;
+import com.dashlane.populartvshows.presentation.models.TvShowModel;
 import com.dashlane.populartvshows.presentation.presenters.base.BasePresenter;
 import com.dashlane.populartvshows.presentation.ui.BaseView;
 import com.dashlane.populartvshows.presentation.ui.activities.TvShowDetailActivity;
@@ -24,6 +24,6 @@ public interface SimilarTvShowsPresenter extends BasePresenter {
          * Show similar tv shows
          * @param similarTvShowList
          */
-        void showSimilarTvShows(List<TvShowData> similarTvShowList);
+        void showSimilarTvShows(List<TvShowModel> similarTvShowList);
     }
 }

@@ -18,10 +18,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.dashlane.populartvshows.R;
-import com.dashlane.populartvshows.domain.TvShowData;
 import com.dashlane.populartvshows.presentation.app.PopularTvShowsApplication;
 import com.dashlane.populartvshows.presentation.app.dependencyinjection.components.DaggerTvShowsComponent;
 import com.dashlane.populartvshows.presentation.app.dependencyinjection.modules.TvShowsModule;
+import com.dashlane.populartvshows.presentation.models.TvShowModel;
 import com.dashlane.populartvshows.presentation.presenters.PopularTvShowsPresenter;
 import com.dashlane.populartvshows.presentation.presenters.base.PresenterCache;
 import com.dashlane.populartvshows.presentation.presenters.base.PresenterFactory;
@@ -48,7 +48,7 @@ import butterknife.InjectView;
 public class PopularTvShowsFragment extends BaseFragment implements PopularTvShowsPresenter.PopularTvShowsView {
 
     public interface OnTvShowListener {
-        void onTvShowClicked(TvShowData tvShow);
+        void onTvShowClicked(TvShowModel tvShow);
     }
 
     private OnTvShowListener onTvShowListener;
@@ -246,7 +246,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
 
                         // if Picasso retrieved item image
                         if (mTvShowsAdapter.isTvShowReady(position)) {
-                            TvShowData tvShowObject = mTvShowsAdapter.getTvShowsList().get(position);
+                            TvShowModel tvShowObject = mTvShowsAdapter.getTvShowsList().get(position);
                             onTvShowListener.onTvShowClicked(tvShowObject);
                         }
                     }
@@ -284,7 +284,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
     }
 
     @Override
-    public void showPopularTvShows(List<TvShowData> tvShowList) {
+    public void showPopularTvShows(List<TvShowModel> tvShowList) {
         mSwipeRefreshLayout.setRefreshing(false);
         mTvShowsAdapter = new PopularTvShowsAdapter(tvShowList);
         mRecyclerView.setAdapter(mTvShowsAdapter);
@@ -297,7 +297,7 @@ public class PopularTvShowsFragment extends BaseFragment implements PopularTvSho
     }
 
     @Override
-    public void appendPopularTvShows(List<TvShowData> tvShowList) {
+    public void appendPopularTvShows(List<TvShowModel> tvShowList) {
         mLoading = true;
         mTvShowsAdapter.appendTvShows(tvShowList);
         mLinearLayoutError.setVisibility(View.GONE);
