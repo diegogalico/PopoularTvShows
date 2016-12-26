@@ -9,9 +9,7 @@
 
 ### Screenshots
 
-![alt tag](https://github.com/diegogalico/PopularTvShows/blob/master/tv_shows.png)
-
-![alt tag](https://github.com/diegogalico/PopularTvShows/blob/master/detail_tv_show.png)
+![alt tag](https://github.com/diegogalico/PopularTvShows/blob/master/tv_shows.png) ![alt tag](https://github.com/diegogalico/PopularTvShows/blob/master/detail_tv_show.png)
 
 ![alt tag](https://github.com/diegogalico/PopularTvShows/blob/master/tv_shows_tablet.png)
 
