@@ -4,7 +4,7 @@
 + Most Popular Tv Shows 
 + Pagination and pull to refresh
 + Tv Show detail
-+ Navigation between similar tv shows
++ Navigation between similar tv shows by swapping horizontally
 + Tablet implementation (more items displayed on Popular Tv Shows and Similar Tv Shows items displayed on a popup dialog)
 
 ### Screenshots
